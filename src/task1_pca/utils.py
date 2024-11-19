@@ -24,7 +24,9 @@ def center_data(data: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
         npt.NDArray[np.float64]: centered data.
     """
     # TODO: Implement method 
-    pass
+    data_mean = np.mean(data, axis=0)
+    data_centered = data - data_mean
+    return np.float64(data_centered)
 
 def compute_svd(data: npt.NDArray[np.float64]) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]]:
     """ Compute (reduced) SVD of the data matrix. Set (full_matrices=False).
@@ -37,8 +39,8 @@ def compute_svd(data: npt.NDArray[np.float64]) -> tuple[npt.NDArray[np.float64],
     """
 
     # TODO: Implement method
-    pass
-
+    U, S, Vt = np.linalg.svd(data, full_matrices=False)
+    return np.float64(U), np.float64(S), np.float64(Vt)
 
 def compute_energy(S: npt.NDArray[np.float64], c:int = 1) -> np.float64:
     """
@@ -53,7 +55,11 @@ def compute_energy(S: npt.NDArray[np.float64], c:int = 1) -> np.float64:
         np.float64: percentage energy in the c-th principal component 
     """
     # TODO: Implement method.
-    pass
+    comp_idx = c - 1
+    total_var = np.sum(S**2)
+    comp_var = S[comp_idx]**2
+    energy_pct = (comp_var / total_var) * 100
+    return np.float64(energy_pct)
 
 
 
@@ -69,8 +75,13 @@ def compute_cumulative_energy(S: npt.NDArray[np.float64], c:int = 1) -> np.float
         np.float64: percentage energy in the first c principal components
     """
     # TODO: Implement method
-    pass
+    total_var = np.sum(S**2)
+    cum_energy = 0
 
+    cum_energy = np.sum(S[:c]**2)
+
+    cum_energy_pct = (cum_energy / total_var) * 100
+    return np.float64(cum_energy_pct)
 
 #################################################
 # Utility functions for 2nd exercise
