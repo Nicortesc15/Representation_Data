@@ -18,9 +18,6 @@ utils.reconstruct_images(U,S,V_t)
 
 
 # TODO: Compute the number of components where energy loss is smaller than 1% using utils.compute_num_components_capturing_threshold_energy()
-print(U.shape)
-print(len(S))
-print(utils.compute_num_components_capturing_threshold_energy(S))
-print(utils.compute_cumulative_energy(S,74))
-print(utils.compute_energy(S,185))
+n_components = utils.compute_num_components_capturing_threshold_energy(S)
+print(n_components)
 
