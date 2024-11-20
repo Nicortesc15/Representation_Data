@@ -21,6 +21,6 @@ utils.reconstruct_images(U,S,V_t)
 print(U.shape)
 print(len(S))
 print(utils.compute_num_components_capturing_threshold_energy(S))
-print(utils.compute_cumulative_energy(S,220))
-print(utils.compute_energy(S,249))
+print(utils.compute_cumulative_energy(S,74))
+print(utils.compute_energy(S,185))
 
