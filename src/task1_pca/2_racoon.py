@@ -6,12 +6,11 @@ We need functions defined in utils.py for this script.
 """
 
 # TODO: Load and resize the racoon image in grayscale
-img = utils.load_resize_image()
-img_t = img.T                   # Columns considered as data points
-print(img_t.shape)
+img = utils.load_resize_image()         
+print(img.shape) 
 # TODO: Compute Singular Value Decomposition (SVD) using utils.compute_svd()
-centered_img_t = utils.center_data(img_t)
-U, S, V_t = utils.compute_svd(centered_img_t)
+centered_img = utils.center_data(img)
+U, S, V_t = utils.compute_svd(centered_img)
 
 # TODO: Reconstruct images using utils.reconstruct_images
 utils.reconstruct_images(U,S,V_t)
