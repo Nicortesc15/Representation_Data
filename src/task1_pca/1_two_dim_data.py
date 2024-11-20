@@ -17,6 +17,7 @@ data_centered = utils.center_data(data)
 # TODO: Compute SVD
 U, S, V_t = utils.compute_svd(data_centered)
 principal_components = V_t.T
+print(S.shape)
 
 # TODO:Plot principal components
 

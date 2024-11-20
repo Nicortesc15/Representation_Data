@@ -9,15 +9,17 @@ from skimage.transform import resize
 import numpy.typing as npt
 import utils
 
-img = utils.load_resize_image()
-img_t = img.T                    # Columns considered as data points
-centered_img_t = utils.center_data(img_t)
-U, S, Vt = utils.compute_svd(centered_img_t)
-print(centered_img_t.shape)
-print(Vt.shape)
+# img = utils.load_resize_image()
+# img_t = img.T                    # Columns considered as data points
+# centered_img_t = utils.center_data(img_t)
+# U, S, Vt = utils.compute_svd(centered_img_t)
+# print(centered_img_t.shape)
+# print(Vt.shape)
 
-# Display the image
-plt.imshow(centered_img_t)
-plt.title("Raccoon Face")
-plt.axis("off")
-plt.show()
+# # Display the image
+# plt.imshow(centered_img_t)
+# plt.title("Raccoon Face")
+# plt.axis("off")
+# plt.show()
+array = range(1, 10)
+print(array)
