@@ -77,9 +77,7 @@ def compute_cumulative_energy(S: npt.NDArray[np.float64], c:int = 1) -> np.float
     # TODO: Implement method
     total_var = np.sum(S**2)
     cum_energy = 0
-
     cum_energy = np.sum(S[:c]**2)
-
     cum_energy_pct = (cum_energy / total_var) * 100
     return np.float64(cum_energy_pct)
 
@@ -94,7 +92,9 @@ def load_resize_image() -> npt.NDArray[np.float64]:
         npt.NDArray[np.float64]: Return the image array
     """
     # TODO: Implement method
-    pass
+    image = scipy.misc.face(gray=True)
+    resized_image = resize(image, (249,185), anti_aliasing= True)
+    return np.float64(resized_image)
 
 
 def reconstruct_data_using_truncated_svd(U:npt.NDArray[np.float64], S:npt.NDArray[np.float64], V_t:npt.NDArray[np.float64], n_components:int):
@@ -111,7 +111,11 @@ def reconstruct_data_using_truncated_svd(U:npt.NDArray[np.float64], S:npt.NDArra
         npt.NDArray[np.float64]: Reconstructed matrix using first 'n_components' principal components.
     """
     # TODO: Implement method
-    pass
+    U_r = U[:, :n_components]               # Obtain the r columns of U corresponding to largest singular values
+    S_r = np.diag(S[:n_components])         # Create a diagonal matrix with the first r singular values from S
+    Vt_r = V_t[:n_components, :]            # Obtain the first r rows of Vt (eigendirections)
+    X_r = U_r @ S_r @ Vt_r                  # Reconstruction of the data 
+    return X_r
 
 
 def reconstruct_images(U:npt.NDArray[np.float64], S:npt.NDArray[np.float64], V_t:npt.NDArray[np.float64]) -> None:
@@ -162,9 +166,15 @@ def compute_num_components_capturing_threshold_energy(S: npt.NDArray[np.float64]
         int: No. of principal components where energy loss is smaller than the energy thereshold
     """
     # TODO: Set energy threshold
+    energy_cum = 100 - energy_threshold
     
     # TODO: Compute total “energy” (explained variance) contained in the sum of first 'c' principal components
     # Note that it is NOT the energy in (only) c-th component!
+    array = np.zeros_like(S)
+    while (len(array)>1):
+        
+
+        
 
     # TODO: Find the number of components where energy loss is smaller than the energy thereshold
     pass

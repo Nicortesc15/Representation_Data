@@ -15,8 +15,8 @@ data_mean = np.mean(data, axis=0)
 data_centered = utils.center_data(data) 
 
 # TODO: Compute SVD
-U, S, Vt = utils.compute_svd(data_centered)
-principal_components = Vt.T
+U, S, V_t = utils.compute_svd(data_centered)
+principal_components = V_t.T
 
 # TODO:Plot principal components
 
@@ -46,21 +46,15 @@ energy_pc2 = utils.compute_energy(S, 2)
 labels = ['PC1', 'PC2']
 pcts = [energy_pc1, energy_pc2]  # Percentages
 colors = ['skyblue', 'orange']
-
-# Plot
 plt.pie(pcts, labels=labels, autopct='%1.1f%%', startangle=90, colors=colors)
 plt.title('Energy Distribution')
 plt.show()
 
 # Reconstrunction of data on a reduced dimensionality r
 r = 1
-U_r = U[:, :r]              # Obtain the r columns of U corresponding to largest singular values
-S_r = np.diag(S[:r])        # Create a diagonal matrix with the first r singular values from S
-Vt_r = Vt[:r, :]            # Obtain the first r rows of Vt (eigendirections)
-X_p = U_r @ S_r             # Projenction on r dimension
-X_r = X_p @ Vt_r            # Reconstruction of the data
+X_r = utils.reconstruct_data_using_truncated_svd(U,S,V_t,r)
 
-# plot of the reconstructed centered data
+# Plot of the reconstructed centered data
 plt.scatter(X_r[:,0],X_r[:,1], alpha=0.7, color = 'black', s =10)
 plt.xlabel("x")
 plt.ylabel("f(x)")
