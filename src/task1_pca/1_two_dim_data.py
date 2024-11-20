@@ -6,7 +6,7 @@ We need functions defined in utils.py for this script.
 """
 
 # TODO: Load the dataset from the file pca_dataset.txt
-data = np.loadtxt('data/pca_dataset.txt', dtype=np.float64, delimiter=" ")
+data = np.loadtxt('data/pca_dataset.txt', dtype=np.float64, delimiter = " ")
 
 # TODO: Compute mean of the data
 data_mean = np.mean(data, axis=0)
