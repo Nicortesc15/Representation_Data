@@ -170,14 +170,22 @@ def compute_num_components_capturing_threshold_energy(S: npt.NDArray[np.float64]
     
     # TODO: Compute total “energy” (explained variance) contained in the sum of first 'c' principal components
     # Note that it is NOT the energy in (only) c-th component!
-    array = np.zeros_like(S)
+    array = range(1, len(S))
+    n = len(S)
     while (len(array)>1):
+        mid_index = len(array) // 2
+        computed_cum_energy = compute_cumulative_energy(S,mid_index)
+        if (computed_cum_energy > energy_cum):
+            array = array[:mid_index]
+            n = S[mid_index]
+        else:
+            array = array[mid_index + 1:]
         
-
+    return n
         
 
     # TODO: Find the number of components where energy loss is smaller than the energy thereshold
-    pass
+    
 
 
 #################################################
