@@ -71,6 +71,8 @@ def create_kernel_matrix(D, eps):
     P_inv = np.diag(1 / np.diag(P))
     K = P_inv @ W @ P_inv
 
+    return K
+
 
 def diffusion_map(X, n_eig_vals=5):
     """ Implementation of the diffusion map algorithm.
