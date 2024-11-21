@@ -63,11 +63,13 @@ def create_kernel_matrix(D, eps):
         npt.NDArray[np.float]: Kernel matrix. (output shape = (np.shape(D)[0], np.shape(D)[0]))
     """
     # TODO: Form the kernel matrix W (Step 3 of the algorithm from the worksheet)
+    W = np.exp((-D**2 / eps))
 
     # TODO: Form the diagonal normalization matrix (Step 4 of the algorithm from the worksheet)
-
+    P = np.diag(np.sum(W, axis = 1))
     # TODO: Normalize W to form the kernel matrix K (Step 5 of the algorithm from the worksheet)
-    pass
+    P_inv = np.diag(1 / np.diag(P))
+    K = P_inv @ W @ P_inv
 
 
 def diffusion_map(X, n_eig_vals=5):
