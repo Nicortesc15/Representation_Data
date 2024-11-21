@@ -105,9 +105,9 @@ def diffusion_map(X, n_eig_vals=5):
     a_l = np.flip(eig_vals)[:(n_eig_vals + 1)]
     v_l = np.flip(eig_vects, axis = 1)[:, :(n_eig_vals + 1)]
     # TODO: Compute the eigenvalues of T_hat^(1/ε) in DESCENDING ORDER (Hint: You can use np.flip(..))!! (Step 9 from the algorithm in the worksheet)
-    lambda_sqr = a_l**(1 / eps)
+    lambda_ = np.sqrt(a_l**(1 / eps))
     # TODO: Compute the eigenvectors of the matrix T (Hint: You can use np.flip(..) with an appropriate axis) (Step 10 from the algorithm in the worksheet)
     phi_l = Q_inv_sqrt @ v_l
     
-    return lambda_sqr, phi_l
+    return lambda_, phi_l
 
