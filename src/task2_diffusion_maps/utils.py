@@ -95,9 +95,10 @@ def diffusion_map(X, n_eig_vals=5):
     # TODO: Form Kernel matrix K. Use function create_kernel_matrix(.., ..) defined in this script. (Steps 3-5 from the algorithm in the worksheet) 
     K = create_kernel_matrix(D, eps)
     # TODO: Form the diagonal normalization matrix (Step 6 from the algorithm in the worksheet)
-    Q = np.diag(np.sum(K, axis = 1))
+    Q_diag = np.sum(K, axis = 1)
+    Q = np.diag(Q_diag)
     # TODO: Form symmetric matrix T_hat (Step 7 from the algorithm in the worksheet)
-    Q_inv_sqrt = np.diag(1 / np.sqrt(Q))
+    Q_inv_sqrt = np.diag(1 / np.sqrt(Q_diag))
     T_hat = Q_inv_sqrt @ K @ Q_inv_sqrt
     # TODO: Find the L + 1 largest eigenvalues and the corresponding eigenvectors of T_hat (Step 8 from the algorithm in the worksheet)
     eig_vals, eig_vects = eigh(T_hat)
