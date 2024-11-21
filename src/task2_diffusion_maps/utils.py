@@ -47,8 +47,10 @@ def set_epsilon(p, distance_matrix):
         np.float64: returns epsilon.
     """
     # TODO: Implement method (Hint: p is a float between 1-100, you have to divide by 100)
-    pass
+    max_distance = distance_matrix.max()
+    eps =  p * max_distance / 100 
 
+    return eps
 
 def create_kernel_matrix(D, eps):
     """Create the Kernel matrix.
