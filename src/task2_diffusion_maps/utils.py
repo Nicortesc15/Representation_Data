@@ -7,7 +7,7 @@ import numpy.typing as npt
 """ This script contains the implementation of the diffusion map algorithm. 
 """
 
-def create_distance_matrix(X, max_distance=200):
+def create_distance_matrix(X, max_distance=200) -> npt.NDArray[np.float]:
     """ Compute a sparse distance matrix using scipy.spatial.KDTree. Set max_distance as 200.
 
     Args:
@@ -19,7 +19,19 @@ def create_distance_matrix(X, max_distance=200):
     """
     # TODO: Implement method
     # Hints: using scipy.spatial.KDTree, set max_distance as 200, you may have to use .toarray() to the array you are returning!)
-    pass
+    N = X.shape[0]                                                  # Number of points in the data-set
+    sparse_matrix = sp.lil_matrix((N,N))                            # Initialize sparse matrix
+
+    tree = sp.spatial.KDTree(X)                                     # Create a tree to look up the nearest neighbors of a point
+
+    for i in range(N):
+        radius_points = tree.query_ball_point(X[i], max_distance)   # Row index of the points inside the radius
+        for j in radius_points:
+            if i != j:
+                distace = np.linalg.norm(X[i] - X[j])               # Distance between neighboring points
+                sparse_matrix[i, j] = distace
+    
+    return sparse_matrix.toarray()
 
 def set_epsilon(p, distance_matrix):
     """ Set scalar epsilon as 'p' % of the diameter of the dataset.

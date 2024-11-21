@@ -26,7 +26,7 @@ def center_data(data: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
     # TODO: Implement method 
     data_mean = np.mean(data, axis=0)
     data_centered = data - data_mean
-    return np.float64(data_centered)
+    return data_centered
 
 def compute_svd(data: npt.NDArray[np.float64]) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]]:
     """ Compute (reduced) SVD of the data matrix. Set (full_matrices=False).
@@ -40,7 +40,7 @@ def compute_svd(data: npt.NDArray[np.float64]) -> tuple[npt.NDArray[np.float64],
 
     # TODO: Implement method
     U, S, Vt = np.linalg.svd(data, full_matrices=False)
-    return np.float64(U), np.float64(S), np.float64(Vt)
+    return U, S, Vt
 
 def compute_energy(S: npt.NDArray[np.float64], c:int = 1) -> np.float64:
     """
@@ -59,7 +59,7 @@ def compute_energy(S: npt.NDArray[np.float64], c:int = 1) -> np.float64:
     total_var = np.sum(S**2)
     comp_var = S[comp_idx]**2
     energy_pct = (comp_var / total_var) * 100
-    return np.float64(energy_pct)
+    return energy_pct
 
 
 
@@ -79,7 +79,7 @@ def compute_cumulative_energy(S: npt.NDArray[np.float64], c:int = 1) -> np.float
     cum_energy = 0
     cum_energy = np.sum(S[:c]**2)
     cum_energy_pct = (cum_energy / total_var) * 100
-    return np.float64(cum_energy_pct)
+    return cum_energy_pct
 
 #################################################
 # Utility functions for 2nd exercise
@@ -94,10 +94,10 @@ def load_resize_image() -> npt.NDArray[np.float64]:
     # TODO: Implement method
     image = scipy.misc.face(gray=True)
     resized_image = resize(image, (249,185))
-    return np.float64(resized_image.T)
+    return resized_image.T
 
 
-def reconstruct_data_using_truncated_svd(U:npt.NDArray[np.float64], S:npt.NDArray[np.float64], V_t:npt.NDArray[np.float64], n_components:int):
+def reconstruct_data_using_truncated_svd(U:npt.NDArray[np.float64], S:npt.NDArray[np.float64], V_t:npt.NDArray[np.float64], n_components:int) -> npt.NDArray[np.float64]:
     """ This function takes in the SVD of the data matrix and reconstructs the data matrix by retaining only 'n_components' SVD components.
     In other words, it computes a low-rank approximation with (rank = n_components) of the data matrix. 
 
