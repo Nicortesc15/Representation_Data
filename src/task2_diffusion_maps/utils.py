@@ -7,7 +7,7 @@ import numpy.typing as npt
 """ This script contains the implementation of the diffusion map algorithm. 
 """
 
-def create_distance_matrix(X, max_distance=200) -> npt.NDArray[np.float]:
+def create_distance_matrix(X, max_distance=200):
     """ Compute a sparse distance matrix using scipy.spatial.KDTree. Set max_distance as 200.
 
     Args:

@@ -97,7 +97,7 @@ def load_resize_image() -> npt.NDArray[np.float64]:
     return resized_image.T
 
 
-def reconstruct_data_using_truncated_svd(U:npt.NDArray[np.float64], S:npt.NDArray[np.float64], V_t:npt.NDArray[np.float64], n_components:int) -> npt.NDArray[np.float64]:
+def reconstruct_data_using_truncated_svd(U:npt.NDArray[np.float64], S:npt.NDArray[np.float64], V_t:npt.NDArray[np.float64], n_components:int):
     """ This function takes in the SVD of the data matrix and reconstructs the data matrix by retaining only 'n_components' SVD components.
     In other words, it computes a low-rank approximation with (rank = n_components) of the data matrix. 
 
