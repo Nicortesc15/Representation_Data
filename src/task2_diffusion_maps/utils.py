@@ -1,5 +1,7 @@
 import scipy as sp
 from scipy.linalg import eigh
+from scipy.sparse import lil_matrix
+from scipy.spatial import KDTree
 import numpy as np
 import matplotlib.pyplot as plt
 import numpy.typing as npt
@@ -20,9 +22,9 @@ def create_distance_matrix(X, max_distance=200):
     # TODO: Implement method
     # Hints: using scipy.spatial.KDTree, set max_distance as 200, you may have to use .toarray() to the array you are returning!)
     N = X.shape[0]                                                  # Number of points in the data-set
-    sparse_matrix = sp.lil_matrix((N,N))                            # Initialize sparse matrix
+    sparse_matrix = lil_matrix((N,N))                               # Initialize sparse matrix
 
-    tree = sp.spatial.KDTree(X)                                     # Create a tree to look up the nearest neighbors of a point
+    tree = KDTree(X)                                                # Create a tree to look up the nearest neighbors of a point
 
     for i in range(N):
         radius_points = tree.query_ball_point(X[i], max_distance)   # Row index of the points inside the radius
