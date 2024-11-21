@@ -9,7 +9,7 @@ We need functions defined in utils.py for this script.
 img = utils.load_resize_image()         
 # TODO: Compute Singular Value Decomposition (SVD) using utils.compute_svd()
 centered_img = utils.center_data(img)
-U, S, V_t = utils.compute_svd(img)
+U, S, V_t = utils.compute_svd(centered_img)
 
 # TODO: Reconstruct images using utils.reconstruct_images
 utils.reconstruct_images(U,S,V_t)
