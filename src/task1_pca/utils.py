@@ -210,5 +210,6 @@ def visualize_traj_two_pedestrians(p1, p2, title_axes_labels):
     plt.xlabel(title_axes_labels[1])
     plt.ylabel(title_axes_labels[2])
     plt.legend()
+    plt.show()
 
 

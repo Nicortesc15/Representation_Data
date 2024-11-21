@@ -17,7 +17,6 @@ data_centered = utils.center_data(data)
 # TODO: Compute SVD
 U, S, V_t = utils.compute_svd(data_centered)
 principal_components = V_t.T
-print(S.shape)
 
 # TODO:Plot principal components
 
@@ -50,6 +49,7 @@ colors = ['skyblue', 'orange']
 plt.pie(pcts, labels=labels, autopct='%1.1f%%', startangle=90, colors=colors)
 plt.title('Energy Distribution')
 plt.show()
+
 
 # Reconstrunction of data on a reduced dimensionality r
 r = 1
