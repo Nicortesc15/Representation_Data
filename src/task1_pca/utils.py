@@ -93,7 +93,7 @@ def load_resize_image() -> npt.NDArray[np.float64]:
     """
     # TODO: Implement method
     image = scipy.misc.face(gray=True)
-    resized_image = resize(image, (249,185), anti_aliasing= True)
+    resized_image = resize(image, (249,185))
     return np.float64(resized_image)
 
 
