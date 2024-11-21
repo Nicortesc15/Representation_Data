@@ -89,19 +89,24 @@ def diffusion_map(X, n_eig_vals=5):
     """
 
     # TODO: Compute distance matrix. Use method create_distance_matrix(..) defined in this script. (Step 1 from the algorithm in the worksheet)
-
+    D = create_distance_matrix(X)
     # TODO: Use function set_epsion(.., ..) defined in this script to set epsilon to 5% of the diameter of the dataset (Step 1 from the algorithm in the worksheet).
-    
+    eps = set_epsilon(5, D)
     # TODO: Form Kernel matrix K. Use function create_kernel_matrix(.., ..) defined in this script. (Steps 3-5 from the algorithm in the worksheet) 
-
+    K = create_kernel_matrix(D, eps)
     # TODO: Form the diagonal normalization matrix (Step 6 from the algorithm in the worksheet)
-
+    Q = np.diag(np.sum(K, axis = 1))
     # TODO: Form symmetric matrix T_hat (Step 7 from the algorithm in the worksheet)
-
+    Q_inv_sqrt = np.diag(1 / np.sqrt(Q))
+    T_hat = Q_inv_sqrt @ K @ Q_inv_sqrt
     # TODO: Find the L + 1 largest eigenvalues and the corresponding eigenvectors of T_hat (Step 8 from the algorithm in the worksheet)
-
+    eig_vals, eig_vects = eigh(T_hat)
+    a_l = np.flip(eig_vals)[:(n_eig_vals + 1)]
+    v_l = np.flip(eig_vects, axis = 1)[:, :(n_eig_vals + 1)]
     # TODO: Compute the eigenvalues of T_hat^(1/ε) in DESCENDING ORDER (Hint: You can use np.flip(..))!! (Step 9 from the algorithm in the worksheet)
-
+    lambda_sqr = a_l**(1 / eps)
     # TODO: Compute the eigenvectors of the matrix T (Hint: You can use np.flip(..) with an appropriate axis) (Step 10 from the algorithm in the worksheet)
-    pass
+    phi_l = Q_inv_sqrt @ v_l
+    
+    return lambda_sqr, phi_l
 
