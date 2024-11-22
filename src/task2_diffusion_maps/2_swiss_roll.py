@@ -10,7 +10,7 @@ import numpy.typing as npt
 """
 
 # TODO: Generate swiss roll dataset
-data_points = 1000
+data_points = 5000
 swiss_roll_data, t= make_swiss_roll(data_points, noise = 0.0)
 
 # TODO: Visualize data-set
