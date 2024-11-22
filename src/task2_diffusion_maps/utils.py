@@ -111,3 +111,36 @@ def diffusion_map(X, n_eig_vals=5):
     
     return lambda_, phi_l
 
+def compute_svd(data: npt.NDArray[np.float64]) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]]:
+    """ Compute (reduced) SVD of the data matrix. Set (full_matrices=False).
+    
+    Args:
+        data (npt.NDArray[np.float]): data matrix.
+
+    Returns:
+        tuple[npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]]: U, S, V_t.
+    """
+
+    # TODO: Implement method
+    U, S, Vt = np.linalg.svd(data, full_matrices=False)
+    return U, S, Vt
+
+def reconstruct_data_using_truncated_svd(U:npt.NDArray[np.float64], S:npt.NDArray[np.float64], V_t:npt.NDArray[np.float64], n_components:int):
+    """ This function takes in the SVD of the data matrix and reconstructs the data matrix by retaining only 'n_components' SVD components.
+    In other words, it computes a low-rank approximation with (rank = n_components) of the data matrix. 
+
+    Args:
+        U (npt.NDArray[np.float64]): Matrix whose columns contain left singular vectors
+        S (npt.NDArray[np.float64]): Matrix with singular values
+        V_t (npt.NDArray[np.float64]): Matrix whose rows contain right singular vectors
+        n_components (int): no. of principal components retained in the low-rank approximation
+
+    Returns:
+        npt.NDArray[np.float64]: Reconstructed matrix using first 'n_components' principal components.
+    """
+    # TODO: Implement method
+    U_r = U[:, :n_components]               # Obtain the r columns of U corresponding to largest singular values
+    S_r = np.diag(S[:n_components])         # Create a diagonal matrix with the first r singular values from S
+    Vt_r = V_t[:n_components, :]            # Obtain the first r rows of Vt (eigendirections)
+    X_r = U_r @ S_r @ Vt_r                  # Reconstruction of the data 
+    return X_r
