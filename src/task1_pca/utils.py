@@ -203,7 +203,6 @@ def visualize_traj_two_pedestrians(p1, p2, title_axes_labels):
         title_axes_labels (tuple [str, str, str]): Title of the plot, x-label and y-label
     """
     plt.figure()
-    plt.subplot(1, 2, 1)
     plt.plot(p1[:, 0], p1[:, 1], label='Pedestrian 1')
     plt.plot(p2[:, 0], p2[:, 1], label='Pedestrian 2')
     plt.title(title_axes_labels[0])

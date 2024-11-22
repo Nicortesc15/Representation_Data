@@ -15,7 +15,7 @@ data_centered = utils.center_data(data)
 p1 = data_centered[:,:2]
 p2 = data_centered[:,2:4]
 # TODO: Visualize trajectories of first two pedestrians (Hint: You can optionally use utils.visualize_traj_two_pedestrians() )
-title = 'trajectories of first two pedestrians'
+title = 'Trajectories of first two pedestrians'
 xlabel = 'x position'
 ylabel = 'y position'
 legend = (title, xlabel, ylabel)

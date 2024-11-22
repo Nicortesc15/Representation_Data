@@ -111,6 +111,20 @@ def diffusion_map(X, n_eig_vals=5):
     
     return lambda_, phi_l
 
+def center_data(data: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
+    """ Center data by subtracting the mean of the data. 
+
+    Args:
+        data (npt.NDArray[np.float64]): Data matrix.
+
+    Returns:
+        npt.NDArray[np.float64]: centered data.
+    """
+    # TODO: Implement method 
+    data_mean = np.mean(data, axis=0)
+    data_centered = data - data_mean
+    return data_centered
+
 def compute_svd(data: npt.NDArray[np.float64]) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]]:
     """ Compute (reduced) SVD of the data matrix. Set (full_matrices=False).
     

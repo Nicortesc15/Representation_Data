@@ -10,7 +10,7 @@ import numpy.typing as npt
 """
 
 # TODO: Generate swiss roll dataset
-data_points = 5000
+data_points = 1000
 swiss_roll_data, t= make_swiss_roll(data_points, noise = 0.0)
 
 # TODO: Visualize data-set
@@ -44,8 +44,9 @@ for i in range(2,n_eig):
     plt.show()
 
 # PCA computation
-U, S, V_t = utils.compute_svd(swiss_roll_data)          # Decompose swiss roll into singular vectors U, V and values S
-n_components = [2,3]                                    # Number of principal components
+swiss_roll_data_centered = utils.center_data(swiss_roll_data)       # centered data
+U, S, V_t = utils.compute_svd(swiss_roll_data_centered)             # Decompose swiss roll into singular vectors U, V and values S
+n_components = [2,3]                                                # Number of principal components
 
 # Plots with n principal components
 for n in n_components:
