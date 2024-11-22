@@ -16,7 +16,17 @@ plt.plot(dataset[:,0], dataset[:,1])
 plt.title('Periodic dataset')
 plt.show()
 # TODO: Plot 5 eigenfunctions associated to the largest eigenvalues using the function diffusion_map() implemented in utils.py
+n_eig = 5
+lambda_, phi_l = utils.diffusion_map(dataset, n_eig)
+for i in range(n_eig):
+    plt.plot(t_k, phi_l[:,i], label = f'phi_{i+1}')
+plt.title(f'{n_eig} eigenfunctions')
+plt.xlabel('t_k')
+plt.ylabel('phi')
+plt.legend()
+print(lambda_)
 
+plt.show()
 # TODO: Plot 5 eigenfunctions
 
 
