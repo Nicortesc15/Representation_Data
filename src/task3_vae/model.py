@@ -20,15 +20,33 @@ class VAE(nn.Module):
         self.device = device
         
         # TODO: Set dimensions: input dim, latent dim, and no. of neurons in the hidden layer
+        self.d_in = d_in                            # input dim
+        self.d_latent = d_latent                    # latent dim
+        self.d_hidden_layer = d_hidden_layer        # no. of neurons in the hidden layer
 
         # TODO: Initialize the encoder using nn.Sequential with appropriate layer dimensions, types (linear, ReLu, Sigmoid etc.).
-
+        self.encoder = nn.Sequential(
+        nn.Linear(d_in, d_hidden_layer),
+        nn.ReLU(),
+        nn.Linear(d_hidden_layer, d_hidden_layer),
+        nn.ReLU()
+        )
         # TODO: Initialize a linear layer for computing the mean (one of the outputs of the encoder)
-        
+        self.mean_layer = nn.Linear(d_hidden_layer, d_latent)
         # TODO: Initialize a linear layer for computing the variance (one of the outputs of the encoder)
-
+        self.logvar_layer = nn.Linear(d_hidden_layer, d_latent)
         # TODO: Initialize the decoder using nn.Sequential with appropriate layer dimensions, types (linear, ReLu, Sigmoid etc.).
-
+                # Decoder
+        self.decoder = nn.Sequential(
+            nn.Linear(d_latent, d_hidden_layer),
+            nn.ReLU(),
+            nn.Linear(d_hidden_layer, d_hidden_layer),
+            nn.ReLU(),
+            nn.Linear(d_hidden_layer, d_in)
+        )
+        
+        # Scalar trainable standard deviation for p(x|z)
+        self.decoder_std = nn.Parameter(torch.tensor(0.5), requires_grad=True)
 
 
     def encode_data(self, x:torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
@@ -40,8 +58,13 @@ class VAE(nn.Module):
         Returns:
             tuple[torch.Tensor, torch.Tensor]: mean, log of variance
         """
+
         # TODO: Implement method!!
-        pass
+        encoder = self.encoder(x)
+        mean = self.mean_layer(encoder)
+        logvar = self.logvar_layer(encoder)
+
+        return mean, logvar
 
     def reparameterize(self, mu:torch.Tensor, logvar:torch.Tensor) -> torch.Tensor:
         """ Use the reparameterization trick for sampling from a Gaussian distribution.
