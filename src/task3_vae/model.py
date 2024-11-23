@@ -77,7 +77,10 @@ class VAE(nn.Module):
             torch.Tensor: Sampled latent vector.
         """
         # TODO: Implement method!!
-        pass
+        sigma = torch.exp(0.5 * logvar)
+        eps = torch.randn_like(mu)
+        z = mu + eps * sigma
+        return z
 
     def decode_data(self, z:torch.Tensor) -> torch.Tensor:
         """ Decode latent vectors to reconstruct data.
@@ -89,7 +92,8 @@ class VAE(nn.Module):
             torch.Tensor: Reconstructed data.
         """
         # TODO: Implement method!!
-        pass
+        x_ = self.decoder(z)
+        return x_
 
 
     def generate_data(self, num_samples:int) -> torch.Tensor:
@@ -103,7 +107,8 @@ class VAE(nn.Module):
         """
         # TODO: Implement method!!
         # Hint (You may need to use .to(self.device) for sampling the latent vector!)
-        pass
+        z = torch.randn(num_samples, self.d_latent).to(self.device)
+        return self.decode_data(z)
     
     def forward(self, x:torch.Tensor) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         """ Forward pass of the VAE.
@@ -115,7 +120,11 @@ class VAE(nn.Module):
             tuple[torch.Tensor, torch.Tensor, torch.Tensor]: reconstructed data, mean of gaussian distribution (encoder), variance of gaussian distribution (encoder)
         """
         # TODO: Implement method!!
-        pass
+        mean, logvar = self.encode_data(x)
+        z = self.reparameterize(mean, logvar)
+        x_ = self.decode_data(z)
+
+        return x_, mean, logvar
 
 
 
