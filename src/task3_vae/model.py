@@ -93,8 +93,10 @@ class VAE(nn.Module):
         """
         # TODO: Implement method!!
         x_ = self.decoder(z)
-        # return x_
-        raise ValueError(f"Shape. {z.shape}")
+        if z.shape[1] != self.d_latent:
+            raise ValueError(f"Latent vector shape mismatch: expected latent dim {self.d_latent}, but got {z.shape[1]}")
+
+        return x_
 
 
     def generate_data(self, num_samples:int) -> torch.Tensor:
