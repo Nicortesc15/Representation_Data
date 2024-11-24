@@ -30,6 +30,7 @@ for i in range(2,n_eig):
     plt.title(f'phi_1 vs phi_{i}')
     plt.xlabel('phi_1')
     plt.ylabel(f'phi_{i}')
+    plt.axis('scaled')
     plt.show()
 
 
