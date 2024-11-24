@@ -94,7 +94,7 @@ def load_resize_image() -> npt.NDArray[np.float64]:
     # TODO: Implement method
     image = scipy.misc.face(gray=True)
     resized_image = resize(image, (249,185))
-    return resized_image
+    return resized_image.T
 
 
 def reconstruct_data_using_truncated_svd(U:npt.NDArray[np.float64], S:npt.NDArray[np.float64], V_t:npt.NDArray[np.float64], n_components:int):
