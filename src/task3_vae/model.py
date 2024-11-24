@@ -124,7 +124,7 @@ class VAE(nn.Module):
         z = self.reparameterize(mean, logvar)
         x_ = self.decode_data(z)
 
-        return x_, mean, torch.exp(0.5 * logvar)
+        return x_, mean, logvar
 
 
 
