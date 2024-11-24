@@ -93,7 +93,8 @@ class VAE(nn.Module):
         """
         # TODO: Implement method!!
         x_ = self.decoder(z)
-        return x_
+        # return x_
+        raise ValueError(f"Shape. {z.shape}")
 
 
     def generate_data(self, num_samples:int) -> torch.Tensor:
