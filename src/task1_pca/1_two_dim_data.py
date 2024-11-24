@@ -30,11 +30,12 @@ colors = ['blue', 'orange']
 for i, color in enumerate(colors):
     direction = principal_components[:, i]
     x, y = limits * direction[0], limits * direction[1]
-    plt.plot(x, y, linestyle='--', color=color)
+    plt.plot(x, y, linestyle='--', color=color, label = f'PC{i+1}')
 
 plt.xlabel("x")
 plt.ylabel("f(x)")
 plt.axis("scaled")
+plt.legend()
 plt.show()
 
 # TODO: Analyze the energy captured by the first two principal components using utils.compute_energy()
