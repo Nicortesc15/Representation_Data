@@ -31,7 +31,8 @@ def kl_loss(logvar:torch.Tensor, mu:torch.Tensor) -> torch.Tensor:
         (torch.Tensor): KL loss
     """
     # TODO: Implement method! 
-    pass
+    kl = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
+    return kl
 
 # Function to compute ELBO loss
 def elbo_loss(x:torch.Tensor, x_reconstructed:torch.Tensor, mu:torch.Tensor, logvar:torch.Tensor):
