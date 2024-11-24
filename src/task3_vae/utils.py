@@ -48,7 +48,16 @@ def elbo_loss(x:torch.Tensor, x_reconstructed:torch.Tensor, mu:torch.Tensor, log
         (torch.Tensor): ELBO loss
     """
     # TODO: Implement method! Hint(You may need to reshape x using x.view(. , .)!)
-    pass
+    
+    x = x.view(x_reconstructed.shape)
+    
+    reconstruction = reconstruction_loss(x_reconstructed, x)
+    
+    # KL divergence loss
+    kl = kl_loss(logvar, mu)
+    
+
+    return reconstruction + kl
 
 # Function for training the VAE
 def train_epoch(model:object, optimizer:object, dataloader:object, device) -> np.float64:
