@@ -29,6 +29,9 @@ p1_recons = recons_data[:,:2]
 p2_recons = recons_data[:,2:4]
 utils.visualize_traj_two_pedestrians(p1_recons, p2_recons, legend)
 # TODO: Answer the questionsin the worksheet with the help of utils.compute_cumulative_energy(), utils.compute_num_components_capturing_threshold_energy()
-
+n_components = utils.compute_num_components_capturing_threshold_energy(S)
+print(n_components)
+cumulative_energy = utils.compute_cumulative_energy(S, 2)
+print(cumulative_energy)
 
 
