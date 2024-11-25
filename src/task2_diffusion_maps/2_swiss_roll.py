@@ -25,14 +25,6 @@ n_eig = 10
 lambda_, phi_l = utils.diffusion_map(swiss_roll_data, n_eig)
 
 # TODO: Plot the first non-constant eigenfunction φ1 against the other eigenfunctions
-# Plot of first non-constant eigenfunction φ1 against φ0
-plt.figure()
-plt.scatter(phi_l[:, 1], phi_l[:, 0], s=1, alpha=0.5)
-plt.title(f'phi_1 vs phi_0')
-plt.xlabel('phi_1')
-plt.ylabel(f'phi_0')
-plt.ylim((-0.1,0.1))
-plt.show()
 
 # Plot of first non-constant eigenfunction φ1 against the other eigenfunctions
 for i in range(2,n_eig):
