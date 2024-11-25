@@ -17,7 +17,7 @@ def reconstruction_loss(x_reconstructed:torch.Tensor, x:torch.Tensor) -> torch.T
         (torch.Tensor): reconstruction loss
     """
     # TODO: Implement method! 
-    mse = F.mse_loss(x_reconstructed, x, reduction='sum').item()
+    mse = F.mse_loss(x_reconstructed, x, reduction='sum')
     return mse
 
 def kl_loss(logvar:torch.Tensor, mu:torch.Tensor) -> torch.Tensor:
@@ -31,7 +31,7 @@ def kl_loss(logvar:torch.Tensor, mu:torch.Tensor) -> torch.Tensor:
         (torch.Tensor): KL loss
     """
     # TODO: Implement method! 
-    kl = -0.5 * torch.sum(1.0 + logvar - mu**2 - logvar.exp()).item()
+    kl = -0.5 * torch.sum(1.0 + logvar - mu**2 - logvar.exp())
     return kl
 
 # Function to compute ELBO loss
@@ -56,8 +56,7 @@ def elbo_loss(x:torch.Tensor, x_reconstructed:torch.Tensor, mu:torch.Tensor, log
     # KL divergence loss
     kl = kl_loss(logvar, mu)
     
-
-    return reconstruction + kl
+    return (reconstruction + kl).item()
 
 # Function for training the VAE
 def train_epoch(model:object, optimizer:object, dataloader:object, device) -> np.float64:
