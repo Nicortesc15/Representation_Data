@@ -17,7 +17,7 @@ def reconstruction_loss(x_reconstructed:torch.Tensor, x:torch.Tensor) -> torch.T
         (torch.Tensor): reconstruction loss
     """
     # TODO: Implement method! 
-    # mse = F.mse_loss(x_reconstructed, x, reduction='sum')
+    mse = F.mse_loss(x_reconstructed, x, reduction='sum')
     # Check and print the type of x_reconstructed and x
     if not isinstance(x_reconstructed, torch.Tensor) or not isinstance(x, torch.Tensor):
         raise TypeError(f"Expected torch.Tensor, but got x_reconstructed: {type(x_reconstructed)}, x: {type(x)}")
