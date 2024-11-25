@@ -18,22 +18,6 @@ def reconstruction_loss(x_reconstructed:torch.Tensor, x:torch.Tensor) -> torch.T
     """
     # TODO: Implement method! 
     mse = F.mse_loss(x_reconstructed, x, reduction='sum')
-    # Check and print the type of x_reconstructed and x
-    if not isinstance(x_reconstructed, torch.Tensor) or not isinstance(x, torch.Tensor):
-        raise TypeError(f"Expected torch.Tensor, but got x_reconstructed: {type(x_reconstructed)}, x: {type(x)}")
-    
-    # Ensure both tensors are on the same device
-    if x_reconstructed.device != x.device:
-        raise RuntimeError(f"Tensors are on different devices: x_reconstructed on {x_reconstructed.device}, x on {x.device}")
-
-    # Debugging shapes
-    if x_reconstructed.shape != x.shape:
-        raise ValueError(f"Shape mismatch: x_reconstructed shape {x_reconstructed.shape}, x shape {x.shape}")
-
-    # Ensure the tensors are of the correct dtype
-    if not (x_reconstructed.dtype.is_floating_point and x.dtype.is_floating_point):
-        raise TypeError(f"Expected floating-point tensors, but got x_reconstructed: {x_reconstructed.dtype}, x: {x.dtype}")
-
     return mse
 
 def kl_loss(logvar:torch.Tensor, mu:torch.Tensor) -> torch.Tensor:
