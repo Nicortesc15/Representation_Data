@@ -89,7 +89,7 @@ def train_epoch(model:object, optimizer:object, dataloader:object, device) -> np
         # TODO: Compute total_loss and return the total_loss/len(dataloader.dataset)
         total_loss = loss.item()
     
-    return total_loss/len(dataloader.dataset)
+    return total_loss / len(dataloader.dataset)
 
 def evaluate(model:object, dataloader:object, device)-> np.float64:
     """ Evaluate the model on the test data and return the test loss.
@@ -105,7 +105,20 @@ def evaluate(model:object, dataloader:object, device)-> np.float64:
     # TODO: Implement method! 
     # Hint: Do not forget to deactivate the gradient calculation!
     # return total_loss/len(dataloader.dataset)
-    pass
+    model.eval()
+    total_loss = 0
+    with torch.no_grad():
+        for data, _ in dataloader:
+            data = data.view(-1, int(np.shape(data)[-1] *np.shape(data)[-2])).to(device)
+            
+            # TODO: Perform forward pass of the VAE
+            x_reconstructed, mu, logvar = model(data)
+            # TODO: Compute ELBO loss
+            loss = elbo_loss(data, x_reconstructed, mu, logvar)
+            # TODO: Compute total_loss and return the total_loss/len(dataloader.dataset)
+            total_loss = loss.item()
+    
+    return total_loss / len(dataloader.dataset)
 
 def latent_representation(model:object, dataloader:object, device) -> None:
     """Plot the latent representation of the data.
@@ -180,10 +193,12 @@ def training_loop(vae:object, optimizer:object, train_loader:object, test_loader
     test_losses = []
     for epoch in range(epochs):
         # TODO: Compute training loss for one epoch
-        
+        train_loss = train_epoch(vae, optimizer, train_loader, device)
         # TODO: Evaluate loss on the test dataset
-        
+        test_loss = evaluate(vae, test_loader, device) 
         # TODO: Append train and test losses to the lists train_losses and test_losses respectively
+        train_losses.append(train_loss)
+        test_losses.append(test_loss)
 
         print(f'Epoch , Train Loss: , Test Loss: ', )
 
@@ -191,7 +206,7 @@ def training_loop(vae:object, optimizer:object, train_loader:object, test_loader
 
 
     # TODO: return train_losses, test_losses
-    pass
+    return train_losses, train_losses
 
 
 def instantiate_vae(d_in, d_latent, d_hidden_layer, device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')):
