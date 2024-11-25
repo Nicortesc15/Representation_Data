@@ -18,6 +18,7 @@ def reconstruction_loss(x_reconstructed:torch.Tensor, x:torch.Tensor) -> torch.T
     """
     # TODO: Implement method! 
     mse = F.mse_loss(x_reconstructed, x, reduction='sum')
+    raise NotImplementedError(f"x_reconstructed: {x_reconstructed.shape}, x: {x.shape}")
     return mse
 
 def kl_loss(logvar:torch.Tensor, mu:torch.Tensor) -> torch.Tensor:
