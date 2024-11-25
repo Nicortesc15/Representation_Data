@@ -32,7 +32,7 @@ def kl_loss(logvar:torch.Tensor, mu:torch.Tensor) -> torch.Tensor:
     """
     # TODO: Implement method! 
     kl = -0.5 * torch.sum(1.0 + logvar - mu**2 - logvar.exp())
-    return kl
+    return kl.item()
 
 # Function to compute ELBO loss
 def elbo_loss(x:torch.Tensor, x_reconstructed:torch.Tensor, mu:torch.Tensor, logvar:torch.Tensor):
