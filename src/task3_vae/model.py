@@ -32,9 +32,9 @@ class VAE(nn.Module):
         nn.ReLU()
         )
         # TODO: Initialize a linear layer for computing the mean (one of the outputs of the encoder)
-        self.mean_layer = nn.Linear(d_hidden_layer, d_latent)
+        self.fc_mu = nn.Linear(d_hidden_layer, d_latent)
         # TODO: Initialize a linear layer for computing the variance (one of the outputs of the encoder)
-        self.logvar_layer = nn.Linear(d_hidden_layer, d_latent)
+        self.fc_logvar = nn.Linear(d_hidden_layer, d_latent)
         # TODO: Initialize the decoder using nn.Sequential with appropriate layer dimensions, types (linear, ReLu, Sigmoid etc.).
                 # Decoder
         self.decoder = nn.Sequential(
@@ -46,9 +46,6 @@ class VAE(nn.Module):
             nn.Sigmoid()
         )
 
-        # Alias for the test case
-        self.fc_mu = self.mean_layer
-        self.fc_logvar = self.logvar_layer
         
         # Scalar trainable standard deviation for p(x|z)
         self.decoder_std = nn.Parameter(torch.tensor(0.5), requires_grad=True)
@@ -66,8 +63,8 @@ class VAE(nn.Module):
 
         # TODO: Implement method!!
         encoder = self.encoder(x)
-        mean = self.mean_layer(encoder)
-        logvar = self.logvar_layer(encoder)
+        mean = self.fc_mu(encoder)
+        logvar = self.fc_logvar(encoder)
 
         return mean, logvar
 
