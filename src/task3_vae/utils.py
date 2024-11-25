@@ -18,7 +18,8 @@ def reconstruction_loss(x_reconstructed:torch.Tensor, x:torch.Tensor) -> torch.T
     """
     # TODO: Implement method! 
     mse = F.mse_loss(x_reconstructed, x, reduction='sum')
-    return mse.item()
+    raise NotImplementedError("mse: ", mse)
+    return mse
 
 def kl_loss(logvar:torch.Tensor, mu:torch.Tensor) -> torch.Tensor:
     """ Compute the Kullback-Leibler (KL) divergence loss using the encoded data into the mean and log-variance.
@@ -32,7 +33,8 @@ def kl_loss(logvar:torch.Tensor, mu:torch.Tensor) -> torch.Tensor:
     """
     # TODO: Implement method! 
     kl = -0.5 * torch.sum(1.0 + logvar - mu**2 - logvar.exp())
-    return kl.item()
+    raise NotImplementedError("kl: ", kl)
+    return kl
 
 # Function to compute ELBO loss
 def elbo_loss(x:torch.Tensor, x_reconstructed:torch.Tensor, mu:torch.Tensor, logvar:torch.Tensor):
