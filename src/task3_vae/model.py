@@ -42,7 +42,8 @@ class VAE(nn.Module):
             nn.ReLU(),
             nn.Linear(d_hidden_layer, d_hidden_layer),
             nn.ReLU(),
-            nn.Linear(d_hidden_layer, d_in)
+            nn.Linear(d_hidden_layer, d_in),
+            nn.ReLU()
         )
         
         # Scalar trainable standard deviation for p(x|z)
