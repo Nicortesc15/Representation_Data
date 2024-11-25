@@ -18,7 +18,6 @@ def reconstruction_loss(x_reconstructed:torch.Tensor, x:torch.Tensor) -> torch.T
     """
     # TODO: Implement method! 
     mse = F.mse_loss(x_reconstructed, x, reduction='sum').item()
-    raise NotImplementedError("mse: ", mse)
     return mse
 
 def kl_loss(logvar:torch.Tensor, mu:torch.Tensor) -> torch.Tensor:
@@ -33,7 +32,6 @@ def kl_loss(logvar:torch.Tensor, mu:torch.Tensor) -> torch.Tensor:
     """
     # TODO: Implement method! 
     kl = -0.5 * torch.sum(1.0 + logvar - mu**2 - logvar.exp()).item()
-    raise NotImplementedError("kl: ", kl)
     return kl
 
 # Function to compute ELBO loss
