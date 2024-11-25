@@ -46,8 +46,9 @@ class VAE(nn.Module):
             nn.Sigmoid()
         )
 
-        # Alias for the test
+        # Alias for the test case
         self.fc_mu = self.mean_layer
+        self.fc_logvar = self.logvar_layer
         
         # Scalar trainable standard deviation for p(x|z)
         self.decoder_std = nn.Parameter(torch.tensor(0.5), requires_grad=True)
