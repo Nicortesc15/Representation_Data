@@ -56,7 +56,7 @@ def elbo_loss(x:torch.Tensor, x_reconstructed:torch.Tensor, mu:torch.Tensor, log
     # KL divergence loss
     kl = kl_loss(logvar, mu)
     
-    return (reconstruction + kl).item()
+    return reconstruction + kl
 
 # Function for training the VAE
 def train_epoch(model:object, optimizer:object, dataloader:object, device) -> np.float64:
