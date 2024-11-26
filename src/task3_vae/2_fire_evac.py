@@ -37,7 +37,7 @@ test_dataset_scaled = rescale_data(test_dataset)
 
 # TODO: Set the learning rate, batch size and no. of epochs
 learning_rate = 0.001
-batch_size = 1000     
+batch_size = 64     
 epochs = 200 
 
 # TODO: Create an instance of Dataloader for train_dataset using torch.utils.data, use appropriate batch size, keep shuffle=True.
