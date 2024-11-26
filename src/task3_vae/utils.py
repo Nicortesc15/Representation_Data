@@ -87,7 +87,7 @@ def train_epoch(model:object, optimizer:object, dataloader:object, device) -> np
         # TODO: Perform an optimization step
         optimizer.step()
         # TODO: Compute total_loss and return the total_loss/len(dataloader.dataset)
-        total_loss = loss.item()
+        total_loss += loss.item()
     
     return total_loss / len(dataloader.dataset)
 
@@ -116,7 +116,7 @@ def evaluate(model:object, dataloader:object, device)-> np.float64:
             # TODO: Compute ELBO loss
             loss = elbo_loss(data, x_reconstructed, mu, logvar)
             # TODO: Compute total_loss and return the total_loss/len(dataloader.dataset)
-            total_loss = loss.item()
+            total_loss += loss.item()
     
     return total_loss / len(dataloader.dataset)
 
