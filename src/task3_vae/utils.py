@@ -130,7 +130,26 @@ def latent_representation(model:object, dataloader:object, device) -> None:
     """
     # TODO: Implement method! 
     # Hint: Do not forget to deactivate the gradient calculation!
-    pass
+    model.eval()
+    latents, labels = [], []
+    with torch.no_grad():
+        for data, target in dataloader:
+            data = data.view(-1, int(np.shape(data)[-1] *np.shape(data)[-2])).to(device)
+            mu, logvar = model.encode_data(data)
+            latents.append(mu.cpu())
+            labels.append(target)
+
+    latents = torch.cat(latents)
+    labels = torch.cat(labels)
+
+    # Plot latent space
+    plt.figure(figsize=(8, 8))
+    scatter = plt.scatter(latents[:, 0], latents[:, 1], c=labels, cmap='viridis', s=2)
+    plt.colorbar(scatter, label='Class Label')
+    plt.title('Latent Representation')
+    plt.xlabel('Latent Dimension 1')
+    plt.ylabel('Latent Dimension 2')
+    plt.show()
 
 # Function to plot reconstructed digits
 def reconstruct_digits(model:object, dataloader:object, device, num_digits:int =15) -> None:
@@ -143,8 +162,25 @@ def reconstruct_digits(model:object, dataloader:object, device, num_digits:int =
         num_digits (int, optional): No. of digits to be re-constructed. Defaults to 15.
     """
     # TODO: Implement method! 
-    # Hint: Do not forget to deactivate the gradient calculation!
-    pass
+    model.eval()
+    with torch.no_grad():
+        data, label = next(iter(dataloader))
+        data = data[:num_digits].view(num_digits, -1).to(device)
+        reconstructed, _, _ = model(data)
+
+        # Convert to CPU for visualization
+        data = data.cpu().view(-1, 28, 28)
+        reconstructed = reconstructed.cpu().view(-1, 28, 28)
+
+        # Plot original and reconstructed images
+        fig, axes = plt.subplots(2, num_digits, figsize=(15, 4))
+        for i in range(num_digits):
+            axes[0, i].imshow(data[i], cmap='gray')
+            axes[0, i].axis('off')
+            axes[1, i].imshow(reconstructed[i], cmap='gray')
+            axes[1, i].axis('off')
+        plt.suptitle('Original (Top) and Reconstructed (Bottom) Digits')
+        plt.show()
 
 
 # Function to plot generated digits
@@ -157,7 +193,17 @@ def generate_digits(model:object, num_samples:int =15) -> None:
     """
     # TODO: Implement method! 
     # Hint: Do not forget to deactivate the gradient calculation!
-    pass
+    model.eval()
+    with torch.no_grad():
+        generated = model.generate_data(num_samples).cpu().view(-1, 28, 28)
+
+        # Plot generated images
+        fig, axes = plt.subplots(1, num_samples, figsize=(15, 4))
+        for i in range(num_samples):
+            axes[i].imshow(generated[i], cmap='gray')
+            axes[i].axis('off')
+        plt.suptitle('Generated Digits')
+        plt.show()
 
 # Function to plot the loss curve
 def plot_loss(train_losses, test_losses):
@@ -200,13 +246,28 @@ def training_loop(vae:object, optimizer:object, train_loader:object, test_loader
         train_losses.append(train_loss)
         test_losses.append(test_loss)
 
-        print(f'Epoch , Train Loss: , Test Loss: ', )
+        print(f"Epoch {epoch}, Train Loss: {train_loss:.5f}, Test Loss: {test_loss:.5f}")
+
+        # Perform experiments at specified epochs
+        if epoch in plots_at_epochs:
+            print(f"=== Experiments after Epoch {epoch} ===")
+            # Plot latent representation
+            print(f"1. Plotting Latent Representation...")
+            latent_representation(vae, test_loader, device)
+
+            # Plot reconstructed digits
+            print(f"2. Plotting Original and Reconstructed Digits...")
+            reconstruct_digits(vae, test_loader, device, num_digits=15)
+
+            # Plot generated digits
+            print(f"3. Plotting Generated Digits...")
+            generate_digits(vae, num_samples=15)
 
         # TODO: For specific epoch numbers described in the worksheet, plot latent representation, reconstructed digits, generated digits after specific epochs
 
 
     # TODO: return train_losses, test_losses
-    return train_losses, train_losses
+    return train_losses, test_losses
 
 
 def instantiate_vae(d_in, d_latent, d_hidden_layer, device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')):

@@ -21,23 +21,34 @@ test_dataset = MNIST(".", train=False, download=True, transform=ToTensor())
 
 
 # TODO: Set the learning rate, batch size and no. of epochs
+learning_rate = 0.001 
+batch_size = 128       
+epochs = 60  
 
 # TODO: Create an instance of Dataloader for train_dataset using torch.utils.data, use appropriate batch size, keep shuffle=True.
+train_loader = DataLoader(train_dataset, batch_size, shuffle = True)
 
 # TODO: Create an instance of Dataloader for test_dataset using torch.utils.data, use appropriate batch size, keep shuffle=False.
+test_loader = DataLoader(test_dataset, batch_size, shuffle = True)
 
 # TODO: Set dimensions: input dim, latent dim, and no. of neurons in the hidden layer
+d_in = 784
+d_latent = 2
+d_hidden_layer = 128
 
 # TODO: Instantiate the VAE model with a latent dimension of 2, using the utility function instantiate_vae() from utils
+vae = instantiate_vae(d_in, d_latent, d_hidden_layer, device)
 
 # TODO. Set up an appropriate optimizer from torch.optim with an appropriate learning rate
+optimizer = optim.Adam(vae.parameters(), learning_rate)
 
 plots_at_epochs = [0, 4, 24, 49]  # generate plots at epoch numbers
 
 # TODO: Compute train and test losses by performing the training loop using the utility function training_loop() from utils
+train_losses, test_losses = training_loop(vae, optimizer, train_loader, test_loader, epochs,plots_at_epochs, device)
 
 # TODO: Plot the loss curve using the utility function plot_loss() from utils
-
+plot_loss(train_losses, test_losses)
 
 ##############################################################
           ##### Subtask 3.5 in the worksheet #######
