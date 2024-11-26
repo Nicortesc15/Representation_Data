@@ -285,3 +285,25 @@ def instantiate_vae(d_in, d_latent, d_hidden_layer, device = torch.device('cuda'
         object: An object of class VAE
     """
     return VAE(d_in, d_latent, d_hidden_layer, device).to(device)
+
+def rescale_data(data: np.ndarray, new_min: float = -1, new_max: float = 1) -> np.ndarray:
+    """
+    Rescale the data to a specified range [new_min, new_max].
+
+    Args:
+        data (np.ndarray): Input data to be rescaled. Should be a NumPy array.
+        new_min (float): The minimum value of the new range. Defaults to -1.
+        new_max (float): The maximum value of the new range. Defaults to 1.
+
+    Returns:
+        np.ndarray: Rescaled data within the range [new_min, new_max].
+    """
+    data_min = np.min(data, axis=0)
+    data_max = np.max(data, axis=0)
+    data_range = data_max - data_min
+
+    # Rescale data
+    scaled_data = (data - data_min) / data_range  
+    rescaled_data = scaled_data * (new_max - new_min) + new_min  
+
+    return rescaled_data
