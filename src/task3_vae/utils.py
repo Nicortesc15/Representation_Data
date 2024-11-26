@@ -134,9 +134,9 @@ def latent_representation(model:object, dataloader:object, device) -> None:
     latents, labels = [], []
     with torch.no_grad():
         for data, target in dataloader:
-            data = data.view(-1, int(np.shape(data)[-1] *np.shape(data)[-2])).to(device)
-            mu, logvar = model.encode_data(data)
-            latents.append(mu.cpu())
+            data = data.view(-1, int(np.shape(data)[-1] *np.shape(data)[-2])).to(device)            
+            mu, logvar = model.encode_data(data)                                                
+            latents.append(mu.cpu())                                                            
             labels.append(target)
 
     latents = torch.cat(latents)
@@ -144,11 +144,11 @@ def latent_representation(model:object, dataloader:object, device) -> None:
 
     # Plot latent space
     plt.figure(figsize=(8, 8))
-    scatter = plt.scatter(latents[:, 0], latents[:, 1], c=labels, cmap='viridis', s=2)
+    scatter = plt.scatter(latents[:, 0], latents[:, 1], c=labels, cmap='tab10', s=2)
     plt.colorbar(scatter, label='Class Label')
     plt.title('Latent Representation')
-    plt.xlabel('Latent Dimension 1')
-    plt.ylabel('Latent Dimension 2')
+    plt.xlabel('z1')
+    plt.ylabel('z2')
     plt.show()
 
 # Function to plot reconstructed digits
@@ -164,11 +164,12 @@ def reconstruct_digits(model:object, dataloader:object, device, num_digits:int =
     # TODO: Implement method! 
     model.eval()
     with torch.no_grad():
+        # Extract the first num_digits of the next batch and flatten the dimension
         data, label = next(iter(dataloader))
         data = data[:num_digits].view(num_digits, -1).to(device)
-        reconstructed, _, _ = model(data)
+        reconstructed, mu, logvar = model(data)
 
-        # Convert to CPU for visualization
+        # Reshape for visualization
         data = data.cpu().view(-1, 28, 28)
         reconstructed = reconstructed.cpu().view(-1, 28, 28)
 
@@ -179,7 +180,9 @@ def reconstruct_digits(model:object, dataloader:object, device, num_digits:int =
             axes[0, i].axis('off')
             axes[1, i].imshow(reconstructed[i], cmap='gray')
             axes[1, i].axis('off')
-        plt.suptitle('Original (Top) and Reconstructed (Bottom) Digits')
+
+        fig.text(0.5, 0.9, 'Original Digits', ha='center', va='center', fontsize=12)
+        fig.text(0.5, 0.5, 'Reconstructed Digits', ha='center', va='center', fontsize=12)
         plt.show()
 
 
@@ -248,24 +251,23 @@ def training_loop(vae:object, optimizer:object, train_loader:object, test_loader
 
         print(f"Epoch {epoch}, Train Loss: {train_loss:.5f}, Test Loss: {test_loss:.5f}")
 
-        # Perform experiments at specified epochs
-        if epoch in plots_at_epochs:
-            print(f"=== Experiments after Epoch {epoch} ===")
-            # Plot latent representation
-            print(f"1. Plotting Latent Representation...")
-            latent_representation(vae, test_loader, device)
-
-            # Plot reconstructed digits
-            print(f"2. Plotting Original and Reconstructed Digits...")
-            reconstruct_digits(vae, test_loader, device, num_digits=15)
-
-            # Plot generated digits
-            print(f"3. Plotting Generated Digits...")
-            generate_digits(vae, num_samples=15)
-
         # TODO: For specific epoch numbers described in the worksheet, plot latent representation, reconstructed digits, generated digits after specific epochs
+        if vae.d_latent == 2:
+            if epoch in plots_at_epochs:
+                print(f"=== Plots after Epoch: {epoch} ===")
+                # Plot latent representation
+                print(f"1. Plot Latent Representation")
+                latent_representation(vae, test_loader, device)
 
+                # Plot reconstructed digits
+                print(f"2. Plot Original and Reconstructed Digits")
+                reconstruct_digits(vae, test_loader, device, num_digits=15)
 
+                # Plot generated digits
+                print(f"3. Plot Generated Digits")
+                generate_digits(vae, num_samples=15)
+
+    
     # TODO: return train_losses, test_losses
     return train_losses, test_losses
 

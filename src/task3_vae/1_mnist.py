@@ -42,7 +42,7 @@ vae = instantiate_vae(d_in, d_latent, d_hidden_layer, device)
 # TODO. Set up an appropriate optimizer from torch.optim with an appropriate learning rate
 optimizer = optim.Adam(vae.parameters(), lr = learning_rate)
 
-plots_at_epochs = [0, 4, 24, 49]  # generate plots at epoch numbers
+plots_at_epochs = [0, 4, 24, epochs-1]  # generate plots at epoch numbers
 
 # TODO: Compute train and test losses by performing the training loop using the utility function training_loop() from utils
 train_losses, test_losses = training_loop(vae, optimizer, train_loader, test_loader, epochs,plots_at_epochs, device)
@@ -50,12 +50,26 @@ train_losses, test_losses = training_loop(vae, optimizer, train_loader, test_loa
 # TODO: Plot the loss curve using the utility function plot_loss() from utils
 plot_loss(train_losses, test_losses)
 
+
 ##############################################################
           ##### Subtask 3.5 in the worksheet #######
 ##############################################################
 # Create the VAE model with a latent dimension of 32
 # TODO: Repeat the above steps with the latent dimension of 32 and compute train and test losses
+d_latent_32 = 32
+# TODO: Instantiate the VAE model with a latent dimension of 32, using the utility function instantiate_vae() from utils
+vae_32 = instantiate_vae(d_in, d_latent_32, d_hidden_layer, device)
+
+# TODO. Set up an appropriate optimizer from torch.optim with an appropriate learning rate
+optimizer_32 = optim.Adam(vae_32.parameters(), lr=learning_rate)
+
+# TODO: Compute train and test losses by performing the training loop using the utility function training_loop() from utils
+train_losses_32, test_losses_32 = training_loop(vae_32, optimizer_32, train_loader, test_loader, epochs, plots_at_epochs, device)
 
 # TODO: (5a) Compare 15 generated digits using the utility function reconstruct_digits()
+reconstruct_digits(vae_32, test_loader, device, num_digits=15)
+generate_digits(vae_32, num_samples=15)
 
 # TODO: (5b) Plot the loss curve using the utility function plot_loss()
+
+plot_loss(train_losses_32, test_losses_32)
