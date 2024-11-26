@@ -17,8 +17,8 @@ def reconstruction_loss(x_reconstructed:torch.Tensor, x:torch.Tensor) -> torch.T
         (torch.Tensor): reconstruction loss
     """
     # TODO: Implement method! 
-    bce_loss = F.binary_cross_entropy(x_reconstructed, x, reduction='sum')
-    return bce_loss
+    mse_loss = F.mse_loss(x_reconstructed, x, reduction='sum')
+    return mse_loss
 
 def kl_loss(logvar:torch.Tensor, mu:torch.Tensor) -> torch.Tensor:
     """ Compute the Kullback-Leibler (KL) divergence loss using the encoded data into the mean and log-variance.
@@ -73,8 +73,8 @@ def train_epoch(model:object, optimizer:object, dataloader:object, device) -> np
     """
     model.train()
     total_loss = 0
-    for data, _ in dataloader:
-        data = data.view(-1, int(np.shape(data)[-1] *np.shape(data)[-2])).to(device)
+    for data in dataloader:
+        data = data.to(device)
         
         # TODO: Set gradient to zero! You can use optimizer.zero_grad()!
         optimizer.zero_grad()
@@ -108,8 +108,8 @@ def evaluate(model:object, dataloader:object, device)-> np.float64:
     model.eval()
     total_loss = 0
     with torch.no_grad():
-        for data, _ in dataloader:
-            data = data.view(-1, int(np.shape(data)[-1] *np.shape(data)[-2])).to(device)
+        for data in dataloader:
+            data = data.to(device)
             
             # TODO: Perform forward pass of the VAE
             x_reconstructed, mu, logvar = model(data)
@@ -131,81 +131,72 @@ def latent_representation(model:object, dataloader:object, device) -> None:
     # TODO: Implement method! 
     # Hint: Do not forget to deactivate the gradient calculation!
     model.eval()
-    latents, labels = [], []
+    latents = []
     with torch.no_grad():
-        for data, target in dataloader:
-            data = data.view(-1, int(np.shape(data)[-1] *np.shape(data)[-2])).to(device)            
+        for data in dataloader:
+            data = data.to(device)            
             mu, logvar = model.encode_data(data)                                                
-            latents.append(mu.cpu())                                                            
-            labels.append(target)
-
-    latents = torch.cat(latents)
-    labels = torch.cat(labels)
+            latents.append(mu.cpu().numpy())
+    latents = np.concatenate(latents, axis=0)
 
     # Plot latent space
-    plt.figure(figsize=(8, 8))
-    scatter = plt.scatter(latents[:, 0], latents[:, 1], c=labels, cmap='tab10', s=2)
-    plt.colorbar(scatter, label='Class Label')
-    plt.title('Latent Representation')
-    plt.xlabel('z1')
-    plt.ylabel('z2')
+    plt.scatter(latents[:, 0], latents[:, 1], alpha=0.5)
+    plt.title("Latent Representation")
+    plt.xlabel("z1")
+    plt.ylabel("z2")
     plt.show()
 
 # Function to plot reconstructed digits
-def reconstruct_digits(model:object, dataloader:object, device, num_digits:int =15) -> None:
-    """ Plot reconstructed digits. 
+def reconstruct_positions(model: object, dataloader: object, device, num_points: int = 15) -> None:
+    """Plot original and reconstructed 2D positions for the FireEvac dataset.
 
     Args:
         model (object): The model (of class VAE).
-        dataloader (object): Data loader combines a dataset and a sampler, and provides an iterable over the given dataset (from torch.utils.data).
-        device: The device (e.g., 'cuda' or 'cpu').
-        num_digits (int, optional): No. of digits to be re-constructed. Defaults to 15.
+        dataloader (object): Data loader providing the FireEvac dataset.
+        device: The device ('cuda' or 'cpu').
+        num_points (int, optional): Number of points to visualize. Defaults to 15.
     """
-    # TODO: Implement method! 
     model.eval()
     with torch.no_grad():
-        # Extract the first num_digits of the next batch and flatten the dimension
-        data, label = next(iter(dataloader))
-        data = data[:num_digits].view(num_digits, -1).to(device)
-        reconstructed, mu, logvar = model(data)
+        # Extract the first num_points of the next batch
+        data = next(iter(dataloader))
+        data = data[:num_points].to(device)
+        reconstructed, _, _ = model(data)
 
-        # Reshape for visualization
-        data = data.cpu().view(-1, 28, 28)
-        reconstructed = reconstructed.cpu().view(-1, 28, 28)
+        # Move data back to CPU in case go GPU
+        reconstructed = reconstructed.cpu().numpy()
 
-        # Plot original and reconstructed images
-        fig, axes = plt.subplots(2, num_digits, figsize=(15, 4))
-        for i in range(num_digits):
-            axes[0, i].imshow(data[i], cmap='gray')
-            axes[0, i].axis('off')
-            axes[1, i].imshow(reconstructed[i], cmap='gray')
-            axes[1, i].axis('off')
-
-        fig.text(0.5, 0.9, 'Original Digits', ha='center', va='center', fontsize=12)
-        fig.text(0.5, 0.5, 'Reconstructed Digits', ha='center', va='center', fontsize=12)
+        # Scatter plot of original and reconstructed points
+        plt.figure(figsize=(8, 8))
+        plt.scatter(reconstructed[:, 0], reconstructed[:, 1], color='red', alpha=0.7)
+        plt.title('Reconstructed Positions')
+        plt.xlabel('x')
+        plt.ylabel('y')
         plt.show()
 
 
+
 # Function to plot generated digits
-def generate_digits(model:object, num_samples:int =15) -> None:
-    """ Generate 'num_samples' digits.
+def generate_positions(model: object, num_samples: int = 15, device='cpu') -> None:
+    """Generate and visualize 'num_samples' 2D positions for the FireEvac dataset.
 
     Args:
-        model (object): The model (of class VAE).
-        num_samples (int, optional): No. of samples to be generated. Defaults to 15.
+        model (object): The trained VAE model.
+        num_samples (int, optional): Number of samples to generate. Defaults to 15.
+        device (str, optional): The device ('cuda' or 'cpu'). Defaults to 'cpu'.
     """
-    # TODO: Implement method! 
-    # Hint: Do not forget to deactivate the gradient calculation!
     model.eval()
     with torch.no_grad():
-        generated = model.generate_data(num_samples).cpu().view(-1, 28, 28)
+        # Generate new samples from the latent space
+        generated = model.generate_data(num_samples).cpu().numpy()
 
-        # Plot generated images
-        fig, axes = plt.subplots(1, num_samples, figsize=(15, 4))
-        for i in range(num_samples):
-            axes[i].imshow(generated[i], cmap='gray')
-            axes[i].axis('off')
-        plt.suptitle('Generated Digits')
+        # Scatter plot of generated samples
+        plt.figure(figsize=(8, 8))
+        plt.scatter(generated[:, 0], generated[:, 1], color='green', alpha=0.7)
+        plt.title(f'{num_samples} Generated Positions')
+        plt.xlabel('x')
+        plt.ylabel('y')
+        plt.legend()
         plt.show()
 
 # Function to plot the loss curve
@@ -261,11 +252,11 @@ def training_loop(vae:object, optimizer:object, train_loader:object, test_loader
 
                 # Plot reconstructed digits
                 print(f"2. Plot Original and Reconstructed Digits")
-                reconstruct_digits(vae, test_loader, device, num_digits=15)
+                reconstruct_positions(vae, test_loader, device, num_points=1000)
 
                 # Plot generated digits
                 print(f"3. Plot Generated Digits")
-                generate_digits(vae, num_samples=15)
+                generate_positions(vae, num_samples=1000)
 
     
     # TODO: return train_losses, test_losses
