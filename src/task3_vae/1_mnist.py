@@ -26,10 +26,10 @@ batch_size = 128
 epochs = 50  
 
 # TODO: Create an instance of Dataloader for train_dataset using torch.utils.data, use appropriate batch size, keep shuffle=True.
-train_loader = DataLoader(train_dataset, batch_size, shuffle = True)
+train_loader = DataLoader(train_dataset, batch_size = batch_size, shuffle = True)
 
 # TODO: Create an instance of Dataloader for test_dataset using torch.utils.data, use appropriate batch size, keep shuffle=False.
-test_loader = DataLoader(test_dataset, batch_size, shuffle = True)
+test_loader = DataLoader(test_dataset, batch_size = batch_size, shuffle = False)
 
 # TODO: Set dimensions: input dim, latent dim, and no. of neurons in the hidden layer
 d_in = 784
@@ -40,7 +40,7 @@ d_hidden_layer = 256
 vae = instantiate_vae(d_in, d_latent, d_hidden_layer, device)
 
 # TODO. Set up an appropriate optimizer from torch.optim with an appropriate learning rate
-optimizer = optim.Adam(vae.parameters(), learning_rate)
+optimizer = optim.Adam(vae.parameters(), lr = learning_rate)
 
 plots_at_epochs = [0, 4, 24, 49]  # generate plots at epoch numbers
 
