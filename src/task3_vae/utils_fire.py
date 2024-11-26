@@ -157,19 +157,29 @@ def reconstruct_positions(model: object, dataloader: object, device, num_points:
         num_points (int, optional): Number of points to visualize. Defaults to 15.
     """
     model.eval()
+    original_data = []
+    reconstructed_data = []
     with torch.no_grad():
-        # Extract the first num_points of the next batch
-        data = next(iter(dataloader))
-        data = data[:num_points].to(device)
-        reconstructed, _, _ = model(data)
+        
+        for batch in dataloader:
+            # Extract data from the batch and move it to the device
+            data = batch.to(device)
+            reconstructed, _, _ = model(data)
 
-        # Move data back to CPU in case go GPU
-        reconstructed = reconstructed.cpu().numpy()
+            # Collect original and reconstructed data
+            original_data.append(data.cpu().numpy())
+            reconstructed_data.append(reconstructed.cpu().numpy())
+
+        
+        # Concatenate all batches into single NumPy arrays
+        original_data = np.concatenate(original_data, axis=0)
+        reconstructed_data = np.concatenate(reconstructed_data, axis=0)
 
         # Scatter plot of original and reconstructed points
         plt.figure(figsize=(8, 8))
-        plt.scatter(reconstructed[:, 0], reconstructed[:, 1], color='red', alpha=0.7)
-        plt.title('Reconstructed Positions')
+        plt.scatter(original_data[:, 0], original_data[:, 1], color='red', alpha=0.7, label = 'Original Positions')
+        plt.scatter(reconstructed_data[:, 0], reconstructed_data[:, 1], color='blue', alpha=0.7, label = 'Reconstructed Positions')
+        plt.title('Original and Reconstructed Positions')
         plt.xlabel('x')
         plt.ylabel('y')
         plt.show()

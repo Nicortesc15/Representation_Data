@@ -37,7 +37,7 @@ test_dataset_scaled = rescale_data(test_dataset)
 
 # TODO: Set the learning rate, batch size and no. of epochs
 learning_rate = 0.001
-batch_size = 64     
+batch_size = 1000     
 epochs = 200 
 
 # TODO: Create an instance of Dataloader for train_dataset using torch.utils.data, use appropriate batch size, keep shuffle=True.
@@ -50,7 +50,7 @@ test_loader = DataLoader(torch.tensor(test_dataset_scaled, dtype=torch.float32),
 # TODO: Set dimensions: input dim, latent dim, and no. of neurons in the hidden layer
 d_in = 2
 d_latent = 2
-d_hidden_layer = 64
+d_hidden_layer = 256
 
 # TODO: Instantiate the VAE model with a latent dimension of 2, using the utility function instantiate_vae() from utils
 vae = instantiate_vae(d_in, d_latent, d_hidden_layer, device)
