@@ -2,7 +2,7 @@ import torch
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
 import numpy as np
-from model import VAE
+from model_fire import VAE
 import numpy.typing as npt
 
 # Define a loss function that combines binary cross-entropy and Kullback-Leibler divergence
@@ -137,14 +137,14 @@ def latent_representation(model:object, dataloader:object, device) -> None:
             data = data.to(device)            
             mu, logvar = model.encode_data(data)                                                
             latents.append(mu.cpu().numpy())
-    latents = np.concatenate(latents, axis=0)
+        latents = np.concatenate(latents, axis=0)
 
-    # Plot latent space
-    plt.scatter(latents[:, 0], latents[:, 1], alpha=0.5)
-    plt.title("Latent Representation")
-    plt.xlabel("z1")
-    plt.ylabel("z2")
-    plt.show()
+        # Plot latent space
+        plt.scatter(latents[:, 0], latents[:, 1], alpha=0.5)
+        plt.title("Latent Representation")
+        plt.xlabel("z1")
+        plt.ylabel("z2")
+        plt.show()
 
 # Function to plot reconstructed digits
 def reconstruct_positions(model: object, dataloader: object, device, num_points: int = 15) -> None:
