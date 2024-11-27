@@ -7,13 +7,15 @@ import scipy.datasets
 from skimage.transform import resize
 import numpy.typing as npt
 
-""" This script contains all the utility functions for the exercise on principal component analysis. 
+""" 
+This script contains all the utility functions for the exercise on principal component analysis. 
 Functions defined in this script are to be used in the respective examples.
 """
 
 #################################################
 # Utility functions for 1st exercise
 #################################################
+
 def center_data(data: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
     """ Center data by subtracting the mean of the data. 
 
@@ -23,10 +25,11 @@ def center_data(data: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
     Returns:
         npt.NDArray[np.float64]: centered data.
     """
-    # TODO: Implement method 
+
     data_mean = np.mean(data, axis=0)
     data_centered = data - data_mean
     return data_centered
+
 
 def compute_svd(data: npt.NDArray[np.float64]) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]]:
     """ Compute (reduced) SVD of the data matrix. Set (full_matrices=False).
@@ -38,9 +41,9 @@ def compute_svd(data: npt.NDArray[np.float64]) -> tuple[npt.NDArray[np.float64],
         tuple[npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]]: U, S, V_t.
     """
 
-    # TODO: Implement method
     U, S, Vt = np.linalg.svd(data, full_matrices=False)
     return U, S, Vt
+
 
 def compute_energy(S: npt.NDArray[np.float64], c:int = 1) -> np.float64:
     """
@@ -54,13 +57,12 @@ def compute_energy(S: npt.NDArray[np.float64], c:int = 1) -> np.float64:
     Returns:
         np.float64: percentage energy in the c-th principal component 
     """
-    # TODO: Implement method.
+
     comp_idx = c - 1
     total_var = np.sum(S**2)
     comp_var = S[comp_idx]**2
     energy_pct = (comp_var / total_var) * 100
     return energy_pct
-
 
 
 def compute_cumulative_energy(S: npt.NDArray[np.float64], c:int = 1) -> np.float64:
@@ -74,12 +76,13 @@ def compute_cumulative_energy(S: npt.NDArray[np.float64], c:int = 1) -> np.float
     Returns:
         np.float64: percentage energy in the first c principal components
     """
-    # TODO: Implement method
+
     total_var = np.sum(S**2)
     cum_energy = 0
     cum_energy = np.sum(S[:c]**2)
     cum_energy_pct = (cum_energy / total_var) * 100
     return cum_energy_pct
+
 
 #################################################
 # Utility functions for 2nd exercise
@@ -91,7 +94,7 @@ def load_resize_image() -> npt.NDArray[np.float64]:
     Returns:
         npt.NDArray[np.float64]: Return the image array
     """
-    # TODO: Implement method
+
     image = scipy.misc.face(gray=True)
     resized_image = resize(image, (249,185))
     return resized_image.T
@@ -110,7 +113,7 @@ def reconstruct_data_using_truncated_svd(U:npt.NDArray[np.float64], S:npt.NDArra
     Returns:
         npt.NDArray[np.float64]: Reconstructed matrix using first 'n_components' principal components.
     """
-    # TODO: Implement method
+
     U_r = U[:, :n_components]               # Obtain the r columns of U corresponding to largest singular values
     S_r = np.diag(S[:n_components])         # Create a diagonal matrix with the first r singular values from S
     Vt_r = V_t[:n_components, :]            # Obtain the first r rows of Vt (eigendirections)
@@ -126,6 +129,7 @@ def reconstruct_images(U:npt.NDArray[np.float64], S:npt.NDArray[np.float64], V_t
         S (npt.NDArray[np.float64]): Matrix with singular values
         Vt (npt.NDArray[np.float64]): Matrix whose rows contain right singular vectors
     """
+
     n_c = [len(S), 120, 50, 10]
     images = []
     for i, num_c in enumerate(n_c):
@@ -157,7 +161,8 @@ def reconstruct_images(U:npt.NDArray[np.float64], S:npt.NDArray[np.float64], V_t
 
 
 def compute_num_components_capturing_threshold_energy(S: npt.NDArray[np.float64], energy_threshold = 0.99) -> int:
-    """ Matrix containing the singular values of the data matrix
+    """ Matrix containing the singular values of the data matrix. It computes the number of components 
+    where energy loss is smaller than the energy thereshold which we set manually
 
     Args:
         S (npt.NDArray[np.float64]): Singular values
@@ -165,18 +170,13 @@ def compute_num_components_capturing_threshold_energy(S: npt.NDArray[np.float64]
     Returns:
         int: No. of principal components where energy loss is smaller than the energy thereshold
     """
-    # TODO: Set energy threshold
-    
-    # TODO: Compute total “energy” (explained variance) contained in the sum of first 'c' principal components
-    # Note that it is NOT the energy in (only) c-th component!
 
-    # TODO: Find the number of components where energy loss is smaller than the energy thereshold
-    
     energy_threshold_pct = energy_threshold * 100
 
+    # Definition of indexes to look through the data using binary search
     low = 0
     high = len(S) - 1
-    n = len(S)
+    num_components_above_threshold = len(S)
     
     while low <= high:
         mid = (high + low) // 2
@@ -184,18 +184,20 @@ def compute_num_components_capturing_threshold_energy(S: npt.NDArray[np.float64]
     
         if cum_energy >= energy_threshold_pct:
             high = mid - 1
-            n = mid + 1
+            num_components_above_threshold = mid + 1
         else:
             low = mid + 1
     
-    return n
+    return num_components_above_threshold
     
+
 #################################################
 # Utility functions for 3rd exercise
 #################################################
-# Visualize trajectories of the first two pedestrians in the original 2D space
+
 def visualize_traj_two_pedestrians(p1, p2, title_axes_labels):
-    """ This function can be used to plot trajectories of the two padestrians.
+    """ This function can be used to plot trajectories of the two pedestrians
+    in the original 2D space
 
     Args:
         p1 (npt.NDArray[np.float64]): data of the first pedestrian
