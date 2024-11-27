@@ -29,12 +29,13 @@ class VAE(nn.Module):
         nn.Linear(d_in, d_hidden_layer),
         nn.ReLU(),
         nn.Linear(d_hidden_layer, d_hidden_layer),
-        nn.ReLU()
+        nn.ReLU(),
+        nn.Linear(d_hidden_layer, d_latent * 2)
         )
         # TODO: Initialize a linear layer for computing the mean (one of the outputs of the encoder)
-        self.fc_mu = nn.Linear(d_hidden_layer, d_latent)
+        self.fc_mu = nn.Linear(d_latent * 2, d_latent)
         # TODO: Initialize a linear layer for computing the variance (one of the outputs of the encoder)
-        self.fc_logvar = nn.Linear(d_hidden_layer, d_latent)
+        self.fc_logvar = nn.Linear(d_latent * 2, d_latent)
         # TODO: Initialize the decoder using nn.Sequential with appropriate layer dimensions, types (linear, ReLu, Sigmoid etc.).
                 # Decoder
         self.decoder = nn.Sequential(

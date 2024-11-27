@@ -17,6 +17,9 @@ def reconstruction_loss(x_reconstructed:torch.Tensor, x:torch.Tensor) -> torch.T
         (torch.Tensor): reconstruction loss
     """
     # TODO: Implement method! 
+
+    x = x.view(-1, x.shape[-1])
+
     mse_loss = F.mse_loss(x_reconstructed, x, reduction='sum')
     return mse_loss
 
@@ -75,8 +78,8 @@ def train_epoch(model:object, optimizer:object, dataloader:object, device) -> np
     """
     model.train()
     total_loss = 0
-    for data in dataloader:
-        data = data.to(device)
+    for data, _ in dataloader:
+        data = data.view(data.shape[0], -1).to(device)
         
         # TODO: Set gradient to zero! You can use optimizer.zero_grad()!
         optimizer.zero_grad()
@@ -110,8 +113,8 @@ def evaluate(model:object, dataloader:object, device)-> np.float64:
     model.eval()
     total_loss = 0
     with torch.no_grad():
-        for data in dataloader:
-            data = data.to(device)
+        for data, _ in dataloader:
+            data = data.view(data.shape[0], -1).to(device)
             
             # TODO: Perform forward pass of the VAE
             x_reconstructed, mu, logvar = model(data)
@@ -135,8 +138,8 @@ def latent_representation(model:object, dataloader:object, device) -> None:
     model.eval()
     latents = []
     with torch.no_grad():
-        for data in dataloader:
-            data = data.to(device)            
+        for data, _ in dataloader:
+            data = data.view(data.shape[0], -1).to(device)            
             mu, logvar = model.encode_data(data)                                                
             latents.append(mu.cpu().numpy())
         latents = np.concatenate(latents, axis=0)
@@ -163,9 +166,9 @@ def reconstruct_positions(model: object, dataloader: object, device, num_points:
     reconstructed_data = []
     with torch.no_grad():
         
-        for batch in dataloader:
+        for data, _ in dataloader:
             # Extract data from the batch and move it to the device
-            data = batch.to(device)
+            data = data.view(data.shape[0], -1).to(device)
             reconstructed, _, _ = model(data)
 
             # Collect original and reconstructed data
@@ -290,24 +293,31 @@ def instantiate_vae(d_in, d_latent, d_hidden_layer, device = torch.device('cuda'
     """
     return VAE(d_in, d_latent, d_hidden_layer, device).to(device)
 
-def rescale_data(data: np.ndarray, new_min: float = -1, new_max: float = 1) -> np.ndarray:
+def rescale_data(train_data: np.ndarray, test_data: np.ndarray, new_min: float = -1, new_max: float = 1) -> np.ndarray:
     """
     Rescale the data to a specified range [new_min, new_max].
 
     Args:
-        data (np.ndarray): Input data to be rescaled. Should be a NumPy array.
+        train_data (np.ndarray): Input train data to be rescaled. Should be a NumPy array.
+        test_data (np.ndarray): Input test data to be rescaled. Should be a NumPy array.
         new_min (float): The minimum value of the new range. Defaults to -1.
         new_max (float): The maximum value of the new range. Defaults to 1.
 
     Returns:
         np.ndarray: Rescaled data within the range [new_min, new_max].
     """
+    # Put all the data together
+    data = np.concatenate((train_data, test_data), axis = 0)
+
     data_min = np.min(data, axis=0)
     data_max = np.max(data, axis=0)
     data_range = data_max - data_min
 
     # Rescale data
-    scaled_data = (data - data_min) / data_range  
-    rescaled_data = scaled_data * (new_max - new_min) + new_min  
+    scaled_train = (train_data - data_min) / data_range  
+    rescaled_train = scaled_train * (new_max - new_min) + new_min
 
-    return rescaled_data
+    scaled_test = (test_data - data_min) / data_range  
+    rescaled_test = scaled_test * (new_max - new_min) + new_min
+
+    return rescaled_train, rescaled_test, data_min, data_max
