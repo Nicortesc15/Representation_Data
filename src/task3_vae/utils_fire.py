@@ -61,7 +61,7 @@ def elbo_loss(x:torch.Tensor, x_reconstructed:torch.Tensor, mu:torch.Tensor, log
     kl = kl_loss(logvar, mu)
 
     # Weighting variable
-    weight = 0.1
+    weight = 0.01
     return (1 - weight) * reconstruction + weight * kl
 
 # Function for training the VAE
@@ -206,15 +206,27 @@ def generate_positions(model: object, num_samples: int = 15, device='cpu') -> No
     with torch.no_grad():
         # Generate new samples from the latent space
         generated = model.generate_data(num_samples).cpu().numpy()
+    
+    return generated
+        
 
-        # Scatter plot of generated samples
-        plt.figure(figsize=(8, 8))
-        plt.scatter(generated[:, 0], generated[:, 1], color='green', s = 5)
-        plt.title(f'{num_samples} Generated Positions')
-        plt.xlabel('x')
-        plt.ylabel('y')
-        plt.legend()
-        plt.show()
+def plot_generate_positions(model: object, num_samples: int = 15, device='cpu') -> None:
+    """
+    Visualize 'num_samples' 2D positions for the FireEvac dataset.
+
+    Args:
+        generated (np.ndarray): Array of generated positions, shape (num_samples, 2).
+        num_samples (int, optional): Number of samples to visualize. Defaults to 15.
+    """
+
+    generated = generate_positions(model, num_samples, device)
+    # Scatter plot of generated samples
+    plt.figure(figsize=(8, 8))
+    plt.scatter(generated[:num_samples, 0], generated[:num_samples, 1], color='green', s=5)
+    plt.title(f'{num_samples} Generated Positions')
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.show()
 
 # Function to plot the loss curve
 def plot_loss(train_losses, test_losses):
@@ -267,13 +279,13 @@ def training_loop(vae:object, optimizer:object, train_loader:object, test_loader
                 print(f"1. Plot Latent Representation")
                 latent_representation(vae, test_loader, device)
 
-                # Plot reconstructed digits
-                print(f"2. Plot Original and Reconstructed Digits")
-                reconstruct_positions(vae, test_loader, device, num_points=1000)
+                # Plot reconstructed positions
+                print(f"2. Plot Original and Reconstructed Positions")
+                reconstruct_positions(vae, test_loader, device, num_points=len(test_loader.dataset))
 
-                # Plot generated digits
-                print(f"3. Plot Generated Digits")
-                generate_positions(vae, num_samples=1000)
+                # Plot generated positions
+                print(f"3. Plot Generated Positions")
+                plot_generate_positions(vae, num_samples=1000)
 
     
     # TODO: return train_losses, test_losses
