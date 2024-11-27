@@ -36,7 +36,7 @@ test_dataset_scaled = rescale_data(test_dataset)
 # TODO: Train a VAE on the FireEvac data
 
 # TODO: Set the learning rate, batch size and no. of epochs
-learning_rate = 0.001
+learning_rate = 0.0001
 batch_size = 64     
 epochs = 200 
 

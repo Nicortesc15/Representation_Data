@@ -142,7 +142,7 @@ def latent_representation(model:object, dataloader:object, device) -> None:
         latents = np.concatenate(latents, axis=0)
 
         # Plot latent space
-        plt.scatter(latents[:, 0], latents[:, 1], alpha=0.5)
+        plt.scatter(latents[:, 0], latents[:, 1], s = 5)
         plt.title("Latent Representation")
         plt.xlabel("z1")
         plt.ylabel("z2")
@@ -205,7 +205,7 @@ def generate_positions(model: object, num_samples: int = 15, device='cpu') -> No
 
         # Scatter plot of generated samples
         plt.figure(figsize=(8, 8))
-        plt.scatter(generated[:, 0], generated[:, 1], color='green', alpha=0.7)
+        plt.scatter(generated[:, 0], generated[:, 1], color='green', s = 5)
         plt.title(f'{num_samples} Generated Positions')
         plt.xlabel('x')
         plt.ylabel('y')
