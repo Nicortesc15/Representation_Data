@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from model_fire import VAE
 import numpy.typing as npt
+from torch.utils.data import Dataset
 
 # Define a loss function that combines binary cross-entropy and Kullback-Leibler divergence
 def reconstruction_loss(x_reconstructed:torch.Tensor, x:torch.Tensor) -> torch.Tensor:
@@ -321,3 +322,18 @@ def rescale_data(train_data: np.ndarray, test_data: np.ndarray, new_min: float =
     rescaled_test = scaled_test * (new_max - new_min) + new_min
 
     return rescaled_train, rescaled_test, data_min, data_max
+
+class FireDataset(Dataset):
+    def __init__(self, data):
+        """Initialize the FireDataset. Ensure that the data is of type np.float32.
+
+        Args:
+            data (npt.NDArray[np.float64]): The data to be used for training/testing.
+        """
+        self.data = data.astype(np.float32)
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, idx):
+        return self.data[idx], self.data[idx]
