@@ -19,12 +19,12 @@ class VAE(nn.Module):
         # Set device
         self.device = device
         
-        # TODO: Set dimensions: input dim, latent dim, and no. of neurons in the hidden layer
+        # Set dimensions: input dim, latent dim, and no. of neurons in the hidden layer
         self.d_in = d_in                            # input dim
         self.d_latent = d_latent                    # latent dim
         self.d_hidden_layer = d_hidden_layer        # no. of neurons in the hidden layer
 
-        # TODO: Initialize the encoder using nn.Sequential with appropriate layer dimensions, types (linear, ReLu, Sigmoid etc.).
+        # Initialize the encoder using nn.Sequential with appropriate layer dimensions, types (linear, ReLu, Sigmoid etc.).
         self.encoder = nn.Sequential(
         nn.Linear(d_in, d_hidden_layer),
         nn.ReLU(),
@@ -32,12 +32,14 @@ class VAE(nn.Module):
         nn.ReLU(),
         nn.Linear(d_hidden_layer, d_latent * 2)
         )
-        # TODO: Initialize a linear layer for computing the mean (one of the outputs of the encoder)
+
+        # Initialize a linear layer for computing the mean (one of the outputs of the encoder)
         self.fc_mu = nn.Linear(d_latent * 2, d_latent)
-        # TODO: Initialize a linear layer for computing the variance (one of the outputs of the encoder)
+
+        # Initialize a linear layer for computing the variance (one of the outputs of the encoder)
         self.fc_logvar = nn.Linear(d_latent * 2, d_latent)
-        # TODO: Initialize the decoder using nn.Sequential with appropriate layer dimensions, types (linear, ReLu, Sigmoid etc.).
-                # Decoder
+
+        # Initialize the decoder using nn.Sequential with appropriate layer dimensions, types (linear, ReLu, Sigmoid etc.).
         self.decoder = nn.Sequential(
             nn.Linear(d_latent, d_hidden_layer),
             nn.ReLU(),
@@ -46,7 +48,6 @@ class VAE(nn.Module):
             nn.Linear(d_hidden_layer, d_in),
             nn.Tanh()
         )
-
         
         # Scalar trainable standard deviation for p(x|z)
         self.decoder_std = nn.Parameter(torch.tensor(0.5), requires_grad=True)
@@ -62,12 +63,11 @@ class VAE(nn.Module):
             tuple[torch.Tensor, torch.Tensor]: mean, log of variance
         """
 
-        # TODO: Implement method!!
         encoder = self.encoder(x)
         mean = self.fc_mu(encoder)
         logvar = self.fc_logvar(encoder)
-
         return mean, logvar
+
 
     def reparameterize(self, mu:torch.Tensor, logvar:torch.Tensor) -> torch.Tensor:
         """ Use the reparameterization trick for sampling from a Gaussian distribution.
@@ -79,11 +79,12 @@ class VAE(nn.Module):
         Returns:
             torch.Tensor: Sampled latent vector.
         """
-        # TODO: Implement method!!
+
         std = torch.exp(0.5 * logvar)
         eps = torch.randn_like(mu)
         z = mu + eps * std
         return z
+
 
     def decode_data(self, z:torch.Tensor) -> torch.Tensor:
         """ Decode latent vectors to reconstruct data.
@@ -94,7 +95,7 @@ class VAE(nn.Module):
         Returns:
             torch.Tensor: Reconstructed data.
         """
-        # TODO: Implement method!!
+
         x_ = self.decoder(z)
         return x_
 
@@ -108,11 +109,11 @@ class VAE(nn.Module):
         Returns:
             torch.Tensor: generated samples.
         """
-        # TODO: Implement method!!
-        # Hint (You may need to use .to(self.device) for sampling the latent vector!)
+
         z = torch.randn(num_samples, self.d_latent).to(self.device)
         return self.decode_data(z)
     
+
     def forward(self, x:torch.Tensor) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         """ Forward pass of the VAE.
 
@@ -122,13 +123,9 @@ class VAE(nn.Module):
         Returns:
             tuple[torch.Tensor, torch.Tensor, torch.Tensor]: reconstructed data, mean of gaussian distribution (encoder), variance of gaussian distribution (encoder)
         """
-        # TODO: Implement method!!
+
         mean, logvar = self.encode_data(x)
         z = self.reparameterize(mean, logvar)
         x_ = self.decode_data(z)
-
         return x_, mean, logvar
-
-
-
 

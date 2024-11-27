@@ -17,12 +17,10 @@ def reconstruction_loss(x_reconstructed:torch.Tensor, x:torch.Tensor) -> torch.T
     Returns:
         (torch.Tensor): reconstruction loss
     """
-    # TODO: Implement method! 
-
     x = x.view(-1, x.shape[-1])
-
     mse_loss = F.mse_loss(x_reconstructed, x, reduction='sum')
     return mse_loss
+
 
 def kl_loss(logvar:torch.Tensor, mu:torch.Tensor) -> torch.Tensor:
     """ Compute the Kullback-Leibler (KL) divergence loss using the encoded data into the mean and log-variance.
@@ -34,9 +32,9 @@ def kl_loss(logvar:torch.Tensor, mu:torch.Tensor) -> torch.Tensor:
     Returns:
         (torch.Tensor): KL loss
     """
-    # TODO: Implement method! 
     kl = -0.5 * torch.sum(1.0 + logvar - mu**2 - logvar.exp())
     return kl
+
 
 # Function to compute ELBO loss
 def elbo_loss(x:torch.Tensor, x_reconstructed:torch.Tensor, mu:torch.Tensor, logvar:torch.Tensor):
@@ -51,10 +49,7 @@ def elbo_loss(x:torch.Tensor, x_reconstructed:torch.Tensor, mu:torch.Tensor, log
     Returns:
         (torch.Tensor): ELBO loss
     """
-    # TODO: Implement method! Hint(You may need to reshape x using x.view(. , .)!)
-    
     x = x.view(x_reconstructed.shape)
-    
     reconstruction = reconstruction_loss(x_reconstructed, x)
     
     # KL divergence loss
@@ -63,6 +58,7 @@ def elbo_loss(x:torch.Tensor, x_reconstructed:torch.Tensor, mu:torch.Tensor, log
     # Weighting variable
     weight = 0.01
     return (1 - weight) * reconstruction + weight * kl
+
 
 # Function for training the VAE
 def train_epoch(model:object, optimizer:object, dataloader:object, device) -> np.float64:
@@ -82,20 +78,26 @@ def train_epoch(model:object, optimizer:object, dataloader:object, device) -> np
     for data, _ in dataloader:
         data = data.view(data.shape[0], -1).to(device)
         
-        # TODO: Set gradient to zero! You can use optimizer.zero_grad()!
+        # Set gradient to zero
         optimizer.zero_grad()
-        # TODO: Perform forward pass of the VAE
+
+        # Perform forward pass of the VAE
         x_reconstructed, mu, logvar = model(data)
-        # TODO: Compute ELBO loss
+
+        # Compute ELBO loss
         loss = elbo_loss(data, x_reconstructed, mu, logvar)
-        # TODO: Compute gradients 
+
+        # Compute gradients 
         loss.backward()
-        # TODO: Perform an optimization step
+
+        # Perform an optimization step
         optimizer.step()
-        # TODO: Compute total_loss and return the total_loss/len(dataloader.dataset)
+
+        # Compute total_loss and return the total_loss/len(dataloader.dataset)
         total_loss += loss.item()
     
     return total_loss / len(dataloader.dataset)
+
 
 def evaluate(model:object, dataloader:object, device)-> np.float64:
     """ Evaluate the model on the test data and return the test loss.
@@ -108,23 +110,22 @@ def evaluate(model:object, dataloader:object, device)-> np.float64:
     Returns:
         np.float64: test loss.
     """
-    # TODO: Implement method! 
-    # Hint: Do not forget to deactivate the gradient calculation!
-    # return total_loss/len(dataloader.dataset)
     model.eval()
     total_loss = 0
     with torch.no_grad():
         for data, _ in dataloader:
             data = data.view(data.shape[0], -1).to(device)
             
-            # TODO: Perform forward pass of the VAE
+            # Perform forward pass of the VAE
             x_reconstructed, mu, logvar = model(data)
-            # TODO: Compute ELBO loss
+
+            # Compute ELBO loss
             loss = elbo_loss(data, x_reconstructed, mu, logvar)
-            # TODO: Compute total_loss and return the total_loss/len(dataloader.dataset)
+            # Compute total_loss and return the total_loss/len(dataloader.dataset)
             total_loss += loss.item()
     
     return total_loss / len(dataloader.dataset)
+
 
 def latent_representation(model:object, dataloader:object, device) -> None:
     """Plot the latent representation of the data.
@@ -134,8 +135,6 @@ def latent_representation(model:object, dataloader:object, device) -> None:
         dataloader (object): Data loader combines a dataset and a sampler, and provides an iterable over the given dataset (from torch.utils.data).
         device: The device (e.g., 'cuda' or 'cpu').
     """
-    # TODO: Implement method! 
-    # Hint: Do not forget to deactivate the gradient calculation!
     model.eval()
     latents = []
     with torch.no_grad():
@@ -148,9 +147,10 @@ def latent_representation(model:object, dataloader:object, device) -> None:
         # Plot latent space
         plt.scatter(latents[:, 0], latents[:, 1], s = 5)
         plt.title("Latent Representation")
-        plt.xlabel("z1")
-        plt.ylabel("z2")
+        plt.xlabel("$z_1$")
+        plt.ylabel("$z_2$")
         plt.show()
+
 
 # Function to plot reconstructed digits
 def reconstruct_positions(model: object, dataloader: object, device, num_points: int = 15) -> None:
@@ -175,7 +175,6 @@ def reconstruct_positions(model: object, dataloader: object, device, num_points:
             # Collect original and reconstructed data
             original_data.append(data.cpu().numpy())
             reconstructed_data.append(reconstructed.cpu().numpy())
-
         
         # Concatenate all batches into single NumPy arrays
         original_data = np.concatenate(original_data, axis=0)
@@ -190,7 +189,6 @@ def reconstruct_positions(model: object, dataloader: object, device, num_points:
         plt.ylabel('y')
         plt.legend()
         plt.show()
-
 
 
 # Function to plot generated digits
@@ -218,8 +216,8 @@ def plot_generate_positions(model: object, num_samples: int = 15, device='cpu') 
         generated (np.ndarray): Array of generated positions, shape (num_samples, 2).
         num_samples (int, optional): Number of samples to visualize. Defaults to 15.
     """
-
     generated = generate_positions(model, num_samples, device)
+
     # Scatter plot of generated samples
     plt.figure(figsize=(8, 8))
     plt.scatter(generated[:num_samples, 0], generated[:num_samples, 1], color='green', s=5)
@@ -227,6 +225,7 @@ def plot_generate_positions(model: object, num_samples: int = 15, device='cpu') 
     plt.xlabel('x')
     plt.ylabel('y')
     plt.show()
+
 
 # Function to plot the loss curve
 def plot_loss(train_losses, test_losses):
@@ -261,17 +260,19 @@ def training_loop(vae:object, optimizer:object, train_loader:object, test_loader
     train_losses = []
     test_losses = []
     for epoch in range(epochs):
-        # TODO: Compute training loss for one epoch
+        # Compute training loss for one epoch
         train_loss = train_epoch(vae, optimizer, train_loader, device)
-        # TODO: Evaluate loss on the test dataset
-        test_loss = evaluate(vae, test_loader, device) 
-        # TODO: Append train and test losses to the lists train_losses and test_losses respectively
+
+        # Evaluate loss on the test dataset
+        test_loss = evaluate(vae, test_loader, device)
+
+        # Append train and test losses to the lists train_losses and test_losses respectively
         train_losses.append(train_loss)
         test_losses.append(test_loss)
 
         print(f"Epoch {epoch}, Train Loss: {train_loss:.5f}, Test Loss: {test_loss:.5f}")
 
-        # TODO: For specific epoch numbers described in the worksheet, plot latent representation, reconstructed digits, generated digits after specific epochs
+        # For specific epoch numbers described in the worksheet, plot latent representation, reconstructed digits, generated digits after specific epochs
         if vae.d_latent == 2:
             if epoch in plots_at_epochs:
                 print(f"=== Plots after Epoch: {epoch} ===")
@@ -287,8 +288,6 @@ def training_loop(vae:object, optimizer:object, train_loader:object, test_loader
                 print(f"3. Plot Generated Positions")
                 plot_generate_positions(vae, num_samples=1000)
 
-    
-    # TODO: return train_losses, test_losses
     return train_losses, test_losses
 
 
@@ -305,6 +304,7 @@ def instantiate_vae(d_in, d_latent, d_hidden_layer, device = torch.device('cuda'
         object: An object of class VAE
     """
     return VAE(d_in, d_latent, d_hidden_layer, device).to(device)
+
 
 def rescale_data(train_data: np.ndarray, test_data: np.ndarray, new_min: float = -1, new_max: float = 1) -> np.ndarray:
     """
@@ -334,6 +334,7 @@ def rescale_data(train_data: np.ndarray, test_data: np.ndarray, new_min: float =
     rescaled_test = scaled_test * (new_max - new_min) + new_min
 
     return rescaled_train, rescaled_test, data_min, data_max
+
 
 class FireDataset(Dataset):
     def __init__(self, data):

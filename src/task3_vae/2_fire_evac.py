@@ -5,23 +5,23 @@ from utils_fire import *
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-""" This script is used to train and test the VAE on the fire_evac dataset. 
+""" 
+This script is used to train and test the VAE on the fire_evac dataset. 
 (Bonus: You can simulate trajectories with Vadere, for bonus points.) 
 Not included in automated tests, as it's open-ended.
 """
+
 np.random.seed(0)
 torch.manual_seed(0)
-# TODO: Download the FireEvac dataset 
+
+#Download the FireEvac dataset 
 train_dataset = np.load('data/FireEvac_train_set.npy')
 test_dataset = np.load('data/FireEvac_test_set.npy')
 
-print(train_dataset.shape)
-print(test_dataset.shape)
-
-# TODO: Rescale data
+# Rescale data
 train_scaled, test_scaled, scaling_data_min, scaling_data_max= rescale_data(train_dataset,test_dataset)
 
-# TODO: Make a scatter plot to visualise it.
+# Make a scatter plot to visualise it.
 plt.scatter(train_scaled[:, 0], train_scaled[:, 1], alpha=0.5, label='Training Data', s=5)
 plt.scatter(test_scaled[:, 0], test_scaled[:, 1], alpha=0.5, label='Test Data', s=5)
 plt.title("FireEvac Dataset")
@@ -30,44 +30,43 @@ plt.ylabel("y-position")
 plt.legend()
 plt.show()
 
-
-# TODO: Train a VAE on the FireEvac data
+# Train a VAE on the FireEvac data
 train_d = FireDataset(train_scaled)
 test_d = FireDataset(test_scaled)
 
-# TODO: Set the learning rate, batch size and no. of epochs
+# Set the learning rate, batch size and no. of epochs
 learning_rate = 0.0001
 batch_size = 64     
 epochs = 200 
 
-# TODO: Create an instance of Dataloader for train_dataset using torch.utils.data, use appropriate batch size, keep shuffle=True.
+# Create an instance of Dataloader for train_dataset using torch.utils.data, use appropriate batch size, keep shuffle=True.
 train_loader = DataLoader(train_d, batch_size=batch_size, shuffle=True)
 
-# TODO: Create an instance of Dataloader for test_dataset using torch.utils.data, use appropriate batch size, keep shuffle=False.
+# Create an instance of Dataloader for test_dataset using torch.utils.data, use appropriate batch size, keep shuffle=False.
 test_loader = DataLoader(test_d, batch_size=batch_size, shuffle=False)
 
 
-# TODO: Set dimensions: input dim, latent dim, and no. of neurons in the hidden layer
+# Set dimensions: input dim, latent dim, and no. of neurons in the hidden layer
 d_in = 2
 d_latent = 2
 d_hidden_layer = 32
 
-# TODO: Instantiate the VAE model with a latent dimension of 2, using the utility function instantiate_vae() from utils
+# Instantiate the VAE model with a latent dimension of 2, using the utility function instantiate_vae() from utils
 vae = instantiate_vae(d_in, d_latent, d_hidden_layer, device)
 
-# TODO. Set up an appropriate optimizer from torch.optim with an appropriate learning rate
-optimizer = optim.Adam(vae.parameters(), lr = learning_rate)
+# Set up an appropriate optimizer from torch.optim with an appropriate learning rate
+optimizer = optim.Adam(vae.parameters(), lr=learning_rate)
 
-plots_at_epochs = [50, 100, epochs -1]  # generate plots at epoch numbers
+plots_at_epochs = [50, 100, epochs - 1]  # generate plots at epoch numbers
 
-# TODO: Compute train and test losses by performing the training loop using the utility function training_loop() from utils
+# Compute train and test losses by performing the training loop using the utility function training_loop() from utils
 train_losses, test_losses = training_loop(vae, optimizer, train_loader, test_loader, epochs, plots_at_epochs, device)
 
-# TODO: Plot the loss curve using the utility function plot_loss() from utils
+# Plot the loss curve using the utility function plot_loss() from utils
 plot_loss(train_losses, test_losses)
 
-# TODO: Generate data to estimate the critical number of people for the MI building
-# Corners of the orange rectangle after rescaling
+# Generate data to estimate the critical number of people for the MI building
+# x,y coordinates of the corners of the orange rectangle after rescaling
 orange_rect_corner_1 = [0.68521264, 0.63112379]  
 orange_rect_corner_2 = [0.79284455, 0.43787233]  
 
@@ -103,3 +102,4 @@ while person_in_rect < 100:
 # Output the result
 if person_in_rect >= 100:
     print("Estimated critical number of people for the MI building: ", person_count)
+
