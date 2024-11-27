@@ -66,16 +66,12 @@ train_losses, test_losses = training_loop(vae, optimizer, train_loader, test_loa
 # TODO: Plot the loss curve using the utility function plot_loss() from utils
 plot_loss(train_losses, test_losses)
 
-# TODO: Make a scatter plot of the reconstructed test set
-
-# TODO: Make a scatter plot of 1000 generated samples.
-
 # TODO: Generate data to estimate the critical number of people for the MI building
-# Define corners of the orange rectangle after rescaling
-orange_rect_corner_1 = [0.68521264, 0.63112379]  # Top-right corner
-orange_rect_corner_2 = [0.79284455, 0.43787233]  # Bottom-left corner
+# Corners of the orange rectangle after rescaling
+orange_rect_corner_1 = [0.68521264, 0.63112379]  
+orange_rect_corner_2 = [0.79284455, 0.43787233]  
 
-# Define rectangle bounds
+# Rectangle bounds
 x_min, x_max = orange_rect_corner_1[0], orange_rect_corner_2[0]
 y_min, y_max = orange_rect_corner_2[1], orange_rect_corner_1[1]
 
@@ -84,13 +80,13 @@ person_count = 0
 person_in_rect = 0
 
 # Generate positions until 100 are in the orange rectangle
-batch_size = 100  # Number of positions to generate per batch
-max_attempts = 100000  # Limit on the total number of persons generated
+people_added = 100  
+max_attempts = 100000 
 
 while person_in_rect < 100:
     # Generate a batch of positions
-    positions = generate_positions(vae, num_samples=batch_size)  # Assuming generate_fire accepts batch size
-    person_count += batch_size
+    positions = generate_positions(vae, num_samples=people_added)  
+    person_count += people_added
 
     # Check which positions are inside the rectangle
     in_rect = (x_min <= positions[:, 0]) & (positions[:, 0] <= x_max) & \

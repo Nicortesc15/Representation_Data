@@ -15,6 +15,9 @@ from utils import *
 # Set the device
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+np.random.seed(0)
+torch.manual_seed(0)
+
 # Load the MNIST dataset: Train and test 
 train_dataset = MNIST(".", train=True, download=True, transform=ToTensor())
 test_dataset = MNIST(".", train=False, download=True, transform=ToTensor())
