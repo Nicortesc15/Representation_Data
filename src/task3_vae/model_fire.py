@@ -79,9 +79,9 @@ class VAE(nn.Module):
             torch.Tensor: Sampled latent vector.
         """
         # TODO: Implement method!!
-        sigma = torch.exp(0.5 * logvar)
+        std = torch.exp(0.5 * logvar)
         eps = torch.randn_like(mu)
-        z = mu + eps * sigma
+        z = mu + eps * std
         return z
 
     def decode_data(self, z:torch.Tensor) -> torch.Tensor:

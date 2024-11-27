@@ -79,9 +79,9 @@ def train_epoch(model:object, optimizer:object, dataloader:object, device) -> np
         # TODO: Set gradient to zero! You can use optimizer.zero_grad()!
         optimizer.zero_grad()
         # TODO: Perform forward pass of the VAE
-        x_reconstructed, mu, logvar = model(data)
+        data_reconstructed, mu, logvar = model(data)
         # TODO: Compute ELBO loss
-        loss = elbo_loss(data, x_reconstructed, mu, logvar)
+        loss = elbo_loss(data, data_reconstructed, mu, logvar)
         # TODO: Compute gradients 
         loss.backward()
         # TODO: Perform an optimization step

@@ -55,8 +55,10 @@ def elbo_loss(x:torch.Tensor, x_reconstructed:torch.Tensor, mu:torch.Tensor, log
     
     # KL divergence loss
     kl = kl_loss(logvar, mu)
-    
-    return reconstruction + kl
+
+    # Weighting variable
+    weight = 0.1
+    return (1 - weight) * reconstruction + weight * kl
 
 # Function for training the VAE
 def train_epoch(model:object, optimizer:object, dataloader:object, device) -> np.float64:
@@ -177,11 +179,12 @@ def reconstruct_positions(model: object, dataloader: object, device, num_points:
 
         # Scatter plot of original and reconstructed points
         plt.figure(figsize=(8, 8))
-        plt.scatter(original_data[:, 0], original_data[:, 1], color='red', alpha=0.7, label = 'Original Positions')
-        plt.scatter(reconstructed_data[:, 0], reconstructed_data[:, 1], color='blue', alpha=0.7, label = 'Reconstructed Positions')
+        plt.scatter(original_data[:, 0], original_data[:, 1], color='red', alpha=0.7, label = 'Original Positions', s = 5)
+        plt.scatter(reconstructed_data[:, 0], reconstructed_data[:, 1], color='blue', alpha=0.7, label = 'Reconstructed Positions', s = 5)
         plt.title('Original and Reconstructed Positions')
         plt.xlabel('x')
         plt.ylabel('y')
+        plt.legend()
         plt.show()
 
 

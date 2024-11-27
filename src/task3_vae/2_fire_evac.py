@@ -21,8 +21,8 @@ print(train_dataset.shape)
 print(test_dataset.shape)
 
 # TODO: Make a scatter plot to visualise it.
-plt.scatter(train_dataset[:, 0], train_dataset[:, 1], alpha=0.5, label='Training Data')
-plt.scatter(test_dataset[:, 0], test_dataset[:, 1], alpha=0.5, label='Test Data')
+plt.scatter(train_dataset[:, 0], train_dataset[:, 1], alpha=0.5, label='Training Data', s=5)
+plt.scatter(test_dataset[:, 0], test_dataset[:, 1], alpha=0.5, label='Test Data', s=5)
 plt.title("FireEvac Dataset")
 plt.xlabel("x-position")
 plt.ylabel("y-position")
