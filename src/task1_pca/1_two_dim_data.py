@@ -8,31 +8,33 @@ We need functions defined in utils.py for this script.
 """
 
 # Load the dataset from the file pca_dataset.txt
-data = np.loadtxt('data/pca_dataset.txt', dtype=np.float64, delimiter = " ")
+data = np.loadtxt("data/pca_dataset.txt", dtype=np.float64, delimiter=" ")
 
 # Compute mean of the data
 data_mean = np.mean(data, axis=0)
 
 # Center data
-data_centered = utils.center_data(data) 
+data_centered = utils.center_data(data)
 
 # Compute SVD
 U, S, V_t = utils.compute_svd(data_centered)
 principal_components = V_t.T
 
 
-# Plot initial data centered 
-plt.scatter(data_centered[:, 0], data_centered[:, 1], alpha=0.7, color='black', s=10)
+# Plot initial data centered
+plt.scatter(
+    data_centered[:, 0], data_centered[:, 1], alpha=0.7, color="black", s=10
+)
 
 # Calculate limits and plot directions of the principal components
 limits = np.array([np.min(data_centered) - 0.5, np.max(data_centered) + 0.5])
-colors = ['blue', 'orange']
+colors = ["blue", "orange"]
 
 # Plot principal components
 for i, color in enumerate(colors):
     direction = principal_components[:, i]
     x, y = limits * direction[0], limits * direction[1]
-    plt.plot(x, y, linestyle='--', color=color, label = f'PC{i + 1}')
+    plt.plot(x, y, linestyle="--", color=color, label=f"PC{i + 1}")
 
 plt.xlabel("x")
 plt.ylabel("f(x)")
@@ -45,11 +47,11 @@ energy_pc1 = utils.compute_energy(S, 1)
 energy_pc2 = utils.compute_energy(S, 2)
 
 # Pie chart of energy percentage
-labels = ['PC1', 'PC2']
+labels = ["PC1", "PC2"]
 pcts = [energy_pc1, energy_pc2]  # Percentages
-colors = ['skyblue', 'orange']
-plt.pie(pcts, labels=labels, autopct='%1.1f%%', startangle=90, colors=colors)
-plt.title('Energy Distribution')
+colors = ["skyblue", "orange"]
+plt.pie(pcts, labels=labels, autopct="%1.1f%%", startangle=90, colors=colors)
+plt.title("Energy Distribution")
 plt.show()
 
 
@@ -58,7 +60,7 @@ r = 1
 X_r = utils.reconstruct_data_using_truncated_svd(U, S, V_t, r)
 
 # Plot of the reconstructed centered data
-plt.scatter(X_r[:, 0], X_r[:, 1], alpha=0.7, color='black', s=10)
+plt.scatter(X_r[:, 0], X_r[:, 1], alpha=0.7, color="black", s=10)
 plt.xlabel("x")
 plt.ylabel("f(x)")
 plt.title("Reconstrunction of data on a reduced dimensionality")

@@ -8,7 +8,9 @@ We need functions defined in utils.py for this script.
 """
 
 # Create a periodic dataset with the details described in the task-sheet
-data = np.loadtxt('data/data_DMAP_PCA_vadere.txt', dtype=np.float64, delimiter = " ")
+data = np.loadtxt(
+    "data/data_DMAP_PCA_vadere.txt", dtype=np.float64, delimiter=" "
+)
 
 # Obtain eigenvalues and eigenfunction using diffusion map
 n_eig = 5
@@ -17,9 +19,9 @@ lambda_, phi_l = utils.diffusion_map(data, n_eig)
 # Plot of first non-constant eigenfunction φ1 against φ0
 plt.figure()
 plt.scatter(phi_l[:, 1], phi_l[:, 0], s=1, alpha=0.5)
-plt.title(f'$\phi_1$ vs $\phi_0$')
-plt.xlabel(r'$\phi_1$')
-plt.ylabel(r'$\phi_0$')
+plt.title(f"$\phi_1$ vs $\phi_0$")
+plt.xlabel(r"$\phi_1$")
+plt.ylabel(r"$\phi_0$")
 plt.ylim((-0.1, 0.1))
 plt.show()
 
@@ -27,12 +29,8 @@ plt.show()
 for i in range(2, n_eig):
     plt.figure()
     plt.scatter(phi_l[:, 1], phi_l[:, i], s=1, alpha=0.5)
-    plt.title(f'$\phi_1$ vs $\phi_{i}$')
-    plt.xlabel(r'$\phi_1$')
-    plt.ylabel(f'$\phi_{i}$')
-    plt.axis('scaled')
+    plt.title(f"$\phi_1$ vs $\phi_{i}$")
+    plt.xlabel(r"$\phi_1$")
+    plt.ylabel(f"$\phi_{i}$")
+    plt.axis("scaled")
     plt.show()
-
-
-
-

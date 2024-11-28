@@ -9,7 +9,9 @@ We need functions defined in utils.py for this script.
 """
 
 # Load trajectory data in data_DMAP_PCA_Vadere.txt. (Hint: You may need to use a space as delimiter)
-data = np.loadtxt('data/data_DMAP_PCA_vadere.txt', dtype=np.float64, delimiter=" ")
+data = np.loadtxt(
+    "data/data_DMAP_PCA_vadere.txt", dtype=np.float64, delimiter=" "
+)
 
 # Center the data by subtracting the mean
 data_centered = utils.center_data(data)
@@ -19,9 +21,9 @@ p1 = data_centered[:, :2]
 p2 = data_centered[:, 2:4]
 
 # Visualize trajectories of first two pedestrians (Hint: You can optionally use utils.visualize_traj_two_pedestrians() )
-title = 'Trajectories of first two pedestrians'
-xlabel = 'x position'
-ylabel = 'y position'
+title = "Trajectories of first two pedestrians"
+xlabel = "x position"
+ylabel = "y position"
 legend = (title, xlabel, ylabel)
 utils.visualize_traj_two_pedestrians(p1, p2, legend)
 
@@ -41,5 +43,3 @@ n_components = utils.compute_num_components_capturing_threshold_energy(S)
 cumulative_energy = utils.compute_cumulative_energy(S, 2)
 print("Number of components for capturing most of the energy: ", n_components)
 print("Cumulative energy for 2 principal components: ", cumulative_energy)
-
-
