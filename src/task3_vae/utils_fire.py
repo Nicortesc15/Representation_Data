@@ -274,6 +274,15 @@ def plot_loss(train_losses, test_losses):
     plt.show()
     plt.savefig("loss_curve.png")
 
+# Function that checks if given positions are inside the given borders
+def check_if_inside_rectangle(positions, x_min, x_max, y_min, y_max):
+    return (
+        (x_min <= positions[:, 0])
+        & (positions[:, 0] <= x_max)
+        & (y_min <= positions[:, 1])
+        & (positions[:, 1] <= y_max)
+    )
+
 
 def training_loop(
     vae: object,

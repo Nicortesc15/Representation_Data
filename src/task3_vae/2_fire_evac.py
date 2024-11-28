@@ -100,12 +100,7 @@ while person_in_rect < 100:
     person_count += people_added
 
     # Check which positions are inside the rectangle
-    in_rect = (
-        (x_min <= positions[:, 0])
-        & (positions[:, 0] <= x_max)
-        & (y_min <= positions[:, 1])
-        & (positions[:, 1] <= y_max)
-    )
+    in_rect = check_if_inside_rectangle(positions, x_min, x_max, y_min, y_max)
 
     # Count new persons in the rectangle
     person_in_rect += np.sum(in_rect)

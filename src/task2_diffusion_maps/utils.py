@@ -180,7 +180,7 @@ def reconstruct_data_using_truncated_svd(
 
     # Obtain the first r rows of Vt (eigendirections)
     Vt_r = V_t[:n_components, :]
-    
+
     # Reconstruction of the data
     X_r = U_r @ S_r @ Vt_r
     return X_r
